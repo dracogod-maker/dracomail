@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRACÓ GOD :: Premium Temp Mail</title>
+    <title>DRACÓ MAIL :: Premium Temp Mail</title>
     <style>
         :root {
             --bg-color: #05070a;
@@ -46,17 +46,6 @@
             overflow: hidden;
         }
 
-        .main-container::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, var(--glow-color) 0%, transparent 60%);
-            z-index: -1;
-        }
-
         .header h1 {
             font-size: 2.2em;
             text-transform: uppercase;
@@ -90,11 +79,9 @@
 
         #currentEmail {
             color: var(--accent-blue);
-            font-size: 1.05em;
+            font-size: 0.95em;
             font-weight: bold;
             word-break: break-all;
-            letter-spacing: 0.5px;
-            margin-right: 10px;
             text-align: left;
         }
 
@@ -178,15 +165,7 @@
             border-radius: 8px;
             margin-bottom: 8px;
             border-left: 3px solid var(--accent-blue);
-            cursor: pointer;
         }
-
-        .email-item:hover {
-            background: rgba(255, 255, 255, 0.07);
-        }
-
-        .email-sender { font-weight: bold; color: var(--text-main); font-size: 0.85em; }
-        .email-subject { color: var(--accent-blue); display: block; margin: 2px 0; font-size: 0.8em; }
 
         .footer {
             position: fixed;
@@ -208,10 +187,10 @@
 
         <div class="email-display-section">
             <div class="email-box">
-                <span id="currentEmail">Connecting to server...</span>
+                <span id="currentEmail">Creating secure email...</span>
                 <button class="icon-btn" onclick="copyEmail()" title="Copy Email">📋</button>
             </div>
-            <button class="action-btn" onclick="getNewEmail()">✨ Generate New Email</button>
+            <button class="action-btn" onclick="createAccount()">✨ Generate New Email</button>
         </div>
 
         <div class="inbox-section">
@@ -220,7 +199,7 @@
                 <button class="refresh-btn" onclick="checkInbox()"><span>🔄</span> Refresh</button>
             </div>
             <ul class="email-list" id="inboxList">
-                <li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">Inbox is empty. Waiting for OTP/Mail...</li>
+                <li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">Inbox is empty. Waiting for OTP...</li>
             </ul>
         </div>
     </div>
@@ -228,82 +207,92 @@
     <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
 
     <script>
-        // Free API setup using 1secmail public domains
-        const domains = ["1secmail.com", "1secmail.org", "1secmail.net"];
-        let currentLogin = "";
-        let currentDomain = "";
+        let currentEmail = "";
+        let currentPassword = "";
+        let token = "";
 
-        function getRandomInt(max) {
-            return Math.floor(Math.random() * max);
+        async function createAccount() {
+            document.getElementById('currentEmail').innerText = "Generating...";
+            try {
+                // Get available domain
+                let domainRes = await fetch('https://api.mail.tm/domains');
+                let domainData = await domainRes.json();
+                let domain = domainData['hydra:member'][0].domain;
+
+                let randomString = Math.random().toString(36).substring(2, 10);
+                currentEmail = randomString + "@" + domain;
+                currentPassword = "Password123!";
+
+                // Create account
+                let regRes = await fetch('https://api.mail.tm/accounts', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address: currentEmail, password: currentPassword })
+                });
+
+                if (regRes.ok) {
+                    document.getElementById('currentEmail').innerText = currentEmail;
+                    getToken();
+                } else {
+                    document.getElementById('currentEmail').innerText = "Error! Try again.";
+                }
+            } catch (e) {
+                document.getElementById('currentEmail').innerText = "Connection failed!";
+            }
         }
 
-        function getNewEmail() {
-            let randomName = Math.random().toString(36.substring(2, 12));
-            currentDomain = domains[getRandomInt(domains.length)];
-            currentLogin = randomName;
-            
-            let fullEmail = currentLogin + "@" + currentDomain;
-            document.getElementById('currentEmail').innerText = fullEmail;
-            
-            // Clear inbox view when new email generated
-            document.getElementById('inboxList').innerHTML = '<li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">Listening for incoming mails...</li>';
+        async function getToken() {
+            try {
+                let res = await fetch('https://api.mail.tm/token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ address: currentEmail, password: currentPassword })
+                });
+                let data = await res.json();
+                token = data.token;
+            } catch (e) {
+                console.error("Token error");
+            }
         }
+
+        async function checkInbox() {
+            if (!token) return;
+            try {
+                let res = await fetch('https://api.mail.tm/messages', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                let data = await res.json();
+                let messages = data['hydra:member'];
+                let inboxList = document.getElementById('inboxList');
+                inboxList.innerHTML = "";
+
+                if (!messages || messages.length === 0) {
+                    inboxList.innerHTML = '<li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">No messages yet.</li>';
+                    return;
+                }
+
+                messages.forEach(msg => {
+                    let item = document.createElement('li');
+                    item.className = 'email-item';
+                    item.innerHTML = `<strong>From:</strong> ${msg.from.address}<br><strong>Subject:</strong> ${msg.subject}`;
+                    inboxList.appendChild(item);
+                });
+            } catch (e) {
+                console.error("Inbox error");
+            }
+        }
+
+        window.onload = function() {
+            createAccount();
+            setInterval(checkInbox, 8000);
+        };
 
         function copyEmail() {
-            let email = document.getElementById('currentEmail').innerText;
-            navigator.clipboard.writeText(email).then(() => {
-                alert('Email copied to clipboard!');
-            });
+            if(currentEmail) {
+                navigator.clipboard.writeText(currentEmail);
+                alert('Email copied successfully!');
+            }
         }
-
-        function checkInbox() {
-            if (!currentLogin) return;
-            
-            let url = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${currentDomain}`;
-            
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    let inboxList = document.getElementById('inboxList');
-                    inboxList.innerHTML = "";
-                    
-                    if (data.length === 0) {
-                        inboxList.innerHTML = '<li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">No messages yet.</li>';
-                        return;
-                    }
-                    
-                    data.forEach(msg => {
-                        let item = document.createElement('li');
-                        item.className = 'email-item';
-                        item.innerHTML = `
-                            <span class="email-sender">${msg.from}</span>
-                            <span class="email-subject">${msg.subject}</span>
-                        `;
-                        // Click to read message content (OTP)
-                        item.onclick = function() {
-                            readMessage(msg.id);
-                        };
-                        inboxList.appendChild(item);
-                    });
-                })
-                .catch(err => console.error("Error fetching mails:", err));
-        }
-
-        function readMessage(id) {
-            let url = `https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${currentDomain}&id=${id}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    alert(`From: ${data.from}\nSubject: ${data.subject}\n\nBody:\n${data.textBody}`);
-                });
-        }
-
-        // Auto generate email on load
-        window.onload = function() {
-            getNewEmail();
-            // Auto check inbox every 10 seconds for new OTPs
-            setInterval(checkInbox, 10000);
-        };
     </script>
 </body>
 </html>
