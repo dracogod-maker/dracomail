@@ -15,6 +15,7 @@
             --danger-red: #ff4757;
             --success-green: #2ed573;
             --warning-gold: #ffa502;
+            --telegram-blue: #229ed9;
         }
 
         * {
@@ -78,15 +79,29 @@
         }
         .header-left p { color: var(--text-muted); font-size: 0.7em; text-align: left; }
         
+        .header-btns { display: flex; gap: 5px; }
         .admin-trigger-btn {
             background: rgba(255, 165, 2, 0.2);
             border: 1px solid var(--warning-gold);
             color: var(--warning-gold);
-            padding: 5px 10px;
+            padding: 5px 8px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.75em;
+            font-size: 0.7em;
             font-weight: bold;
+        }
+        .help-btn {
+            background: rgba(34, 158, 217, 0.2);
+            border: 1px solid var(--telegram-blue);
+            color: var(--telegram-blue);
+            padding: 5px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.7em;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
         }
 
         .status-bar {
@@ -201,11 +216,14 @@
             background: rgba(0, 242, 255, 0.15);
             border: 1px solid var(--accent-blue);
             color: var(--accent-blue);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.75em;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .nav-tabs { display: flex; gap: 8px; font-size: 0.75em; }
@@ -301,7 +319,10 @@
                 <h1>DRACÓ MAIL</h1>
                 <p>Game & Social Verified Mails</p>
             </div>
-            <button class="admin-trigger-btn" onclick="checkAdminAccess()">👑 Admin</button>
+            <div class="header-btns">
+                <a href="https://t.me/DRACO_GOD" target="_blank" class="help-btn" title="Contact Support">💬 Help</a>
+                <button class="admin-trigger-btn" onclick="checkAdminAccess()">👑 Admin</button>
+            </div>
         </div>
 
         <div class="status-bar">
@@ -345,7 +366,7 @@
             </div>
             
             <div class="inbox-actions-bar">
-                <button class="refresh-btn" onclick="checkInbox()">🔄 Refresh Inbox</button>
+                <button class="refresh-btn" onclick="checkInbox()">🔄 <span id="refreshText">Refresh Inbox</span></button>
                 <span style="font-size:0.65em; color:var(--text-muted);">Auto-checking OTPs...</span>
             </div>
 
@@ -356,8 +377,7 @@
 
         <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
     </div>
-
-    <script>
+        <script>
         const ADMIN_SECRET = "dracoadmin999";
         let userId = localStorage.getItem('draco_user_id');
         if (!userId) {
@@ -486,15 +506,32 @@
 
         function checkInbox() {
             if (!currentLogin) return;
-            fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`)
+            
+            let btnText = document.getElementById('refreshText');
+            btnText.innerText = "Checking...";
+
+            let targetUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
+            let proxyUrl = `https://api.allorigins.win/get?url=` + encodeURIComponent(targetUrl);
+
+            fetch(proxyUrl)
                 .then(res => res.json())
-                .then(data => {
-                    if(Array.isArray(data)) {
-                        let existingIds = [...messages, ...trashBin].map(m => m.id);
-                        data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
-                        renderInbox();
+                .then(response => {
+                    btnText.innerText = "Refresh Inbox";
+                    try {
+                        let data = JSON.parse(response.contents);
+                        if(Array.isArray(data)) {
+                            let existingIds = [...messages, ...trashBin].map(m => m.id);
+                            data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
+                            renderInbox();
+                        }
+                    } catch(e) {
+                        console.log("Parse error", e);
                     }
-                }).catch(err => console.log(err));
+                })
+                .catch(err => {
+                    btnText.innerText = "Refresh Inbox";
+                    console.log("Fetch error", err);
+                });
         }
 
         function deleteMessage(id) {
