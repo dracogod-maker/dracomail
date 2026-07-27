@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRACÓ MAIL PRO :: Advanced Temp Mail & Panel</title>
+    <title>DRACÓ MAIL PRO :: Ultimate OTP Gateway</title>
     <style>
         :root {
             --bg-color: #05070a;
-            --card-bg: rgba(10, 20, 30, 0.85);
+            --card-bg: rgba(10, 20, 30, 0.9);
             --accent-blue: #00f2ff;
             --glow-color: rgba(0, 242, 255, 0.3);
             --text-main: #ffffff;
@@ -18,12 +18,7 @@
             --telegram-blue: #229ed9;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -44,17 +39,30 @@
             align-items: center;
             z-index: 9999;
         }
-        .modal-box {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-blue);
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 0 30px var(--glow-color);
-            width: 90%;
-            max-width: 400px;
+
+        /* Big Mail Reader Modal */
+        .mail-reader-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.95);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
         }
-        .modal-box h2 { color: var(--accent-blue); margin-bottom: 12px; font-size: 1.3em; }
+        .mail-reader-content {
+            background: #0b131a;
+            border: 2px solid var(--success-green);
+            border-radius: 15px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 85vh;
+            padding: 20px;
+            box-shadow: 0 0 40px rgba(46, 213, 115, 0.3);
+            overflow-y: auto;
+            text-align: left;
+        }
 
         .main-container {
             background: var(--card-bg);
@@ -63,21 +71,21 @@
             border-radius: 20px;
             padding: 18px;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             text-align: center;
             box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.6);
         }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .header-left h1 {
-            font-size: 1.5em;
+            font-size: 1.4em;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--accent-blue);
             text-shadow: 0 0 10px var(--accent-blue);
             text-align: left;
         }
-        .header-left p { color: var(--text-muted); font-size: 0.7em; text-align: left; }
+        .header-left p { color: var(--text-muted); font-size: 0.65em; text-align: left; }
         
         .header-btns { display: flex; gap: 5px; }
         .admin-trigger-btn {
@@ -112,14 +120,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-size: 0.85em;
         }
         .points-badge { color: var(--warning-gold); font-weight: bold; }
         .vip-badge { color: var(--success-green); font-weight: bold; text-transform: uppercase; }
 
         .email-box {
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             border: 2px solid var(--accent-blue);
             border-radius: 10px;
             padding: 10px;
@@ -132,40 +140,53 @@
 
         #currentEmail {
             color: var(--accent-blue);
-            font-size: 0.85em;
+            font-size: 0.8em;
             font-weight: bold;
             word-break: break-all;
             text-align: left;
         }
 
         .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em; }
-        .domain-label { font-size: 0.75em; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+        .domain-label { font-size: 0.75em; color: var(--warning-gold); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: left; font-weight: bold; }
 
+        /* Domains List with Tags Layout */
         .domain-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
             margin-bottom: 12px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 2px;
+            text-align: left;
         }
 
-        .domain-btn {
-            background: rgba(255, 255, 255, 0.05);
+        .domain-card {
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-muted);
-            padding: 6px 2px;
+            padding: 6px 10px;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 0.65em;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
         }
-        .domain-btn.active {
-            background: var(--accent-blue);
-            color: #000;
-            font-weight: bold;
+        .domain-card:hover { background: rgba(255, 255, 255, 0.08); }
+        .domain-card.active {
+            background: rgba(0, 242, 255, 0.15);
             border-color: var(--accent-blue);
+            box-shadow: 0 0 8px var(--glow-color);
         }
+
+        .domain-name { font-size: 0.75em; font-weight: bold; color: var(--text-main); }
+        .domain-tag { font-size: 0.6em; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        
+        /* Tag Colors */
+        .tag-game { background: rgba(255, 71, 87, 0.2); color: var(--danger-red); border: 1px solid var(--danger-red); }
+        .tag-insta { background: rgba(255, 105, 180, 0.2); color: #ff69b4; border: 1px solid #ff69b4; }
+        .tag-fb { background: rgba(34, 158, 217, 0.2); color: var(--telegram-blue); border: 1px solid var(--telegram-blue); }
+        .tag-app { background: rgba(46, 213, 115, 0.2); color: var(--success-green); border: 1px solid var(--success-green); }
 
         .action-btn {
             width: 100%;
@@ -174,32 +195,11 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.85em;
+            font-size: 0.8em;
             text-transform: uppercase;
             background: linear-gradient(45deg, #007bff, var(--accent-blue));
             color: #000;
             margin-bottom: 10px;
-        }
-
-        .membership-banner {
-            background: linear-gradient(135deg, rgba(255,165,2,0.15), rgba(255,71,87,0.15));
-            border: 1px dashed var(--warning-gold);
-            border-radius: 8px;
-            padding: 8px;
-            margin-bottom: 12px;
-            font-size: 0.75em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .membership-banner button {
-            background: var(--warning-gold);
-            border: none;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #000;
         }
 
         .inbox-section { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; text-align: left; }
@@ -226,35 +226,30 @@
             gap: 4px;
         }
 
-        .nav-tabs { display: flex; gap: 8px; font-size: 0.75em; }
-        .nav-tabs span { cursor: pointer; color: var(--text-muted); }
-        .nav-tabs span.active { color: var(--accent-blue); font-weight: bold; }
-
-        .email-list { list-style: none; max-height: 140px; overflow-y: auto; }
+        .email-list { list-style: none; max-height: 130px; overflow-y: auto; }
         .email-item {
             background: rgba(255, 255, 255, 0.03);
-            padding: 6px 8px;
+            padding: 7px 10px;
             border-radius: 6px;
             margin-bottom: 5px;
-            border-left: 3px solid var(--accent-blue);
+            border-left: 3px solid var(--success-green);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
-        .email-info { font-size: 0.7em; width: 75%; }
-        .email-sender { font-weight: bold; color: var(--text-main); display: block; }
+        .email-item:hover { background: rgba(255,255,255,0.08); }
+        .email-info { font-size: 0.7em; width: 85%; }
+        .email-sender { font-weight: bold; color: var(--success-green); display: block; }
         .email-subject { color: var(--accent-blue); }
 
-        .mail-actions button { background: none; border: none; cursor: pointer; font-size: 0.9em; padding: 2px 4px; }
-        .delete-btn { color: var(--danger-red); }
-        .recover-btn { color: var(--success-green); }
-
+        /* Admin Panel */
         #adminPanel {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5, 7, 10, 0.98);
-            z-index: 10000;
+            z-index: 10002;
             padding: 20px;
             overflow-y: auto;
             text-align: left;
@@ -263,119 +258,142 @@
         .admin-header h2 { color: var(--warning-gold); }
         .close-admin { background: var(--danger-red); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .stat-card h3 { font-size: 0.75em; color: var(--text-muted); }
-        .stat-card p { font-size: 1.2em; color: var(--accent-blue); font-weight: bold; margin-top: 5px; }
-
-        .user-table-container { background: rgba(0,0,0,0.4); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); padding: 10px; max-height: 300px; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+        .user-table-container { background: rgba(0,0,0,0.5); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); padding: 10px; max-height: 350px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.7em; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
         th { color: var(--warning-gold); }
-        .footer { margin-top: 10px; color: rgba(255, 255, 255, 0.2); font-size: 0.7em; text-align: center; }
-        .footer strong { color: var(--accent-blue); }
+        .footer { margin-top: 10px; color: rgba(255, 255, 255, 0.2); font-size: 0.65em; text-align: center; }
     </style>
 </head>
 <body>
-    <div id="membershipModal" class="modal-overlay" style="display: none;">
-        <div class="modal-box">
-            <h2>💎 VIP Membership</h2>
-            <p style="font-size:0.8em; color:var(--text-muted); margin-bottom:15px;">Aapke points khatam ho gaye hain! Recharge ke liye apna User ID copy karke Admin ko bhejein.</p>
-            <div style="background:rgba(0,0,0,0.5); padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid var(--warning-gold);">
-                <span style="font-size:0.75em; color:var(--text-muted); display:block;">Your Unique User ID:</span>
-                <strong id="myUserIdDisplay" style="color:var(--accent-blue); font-size:0.9em; word-break:break-all;">---</strong>
-                <button onclick="copyUserId()" style="margin-top:5px; background:var(--accent-blue); border:none; padding:3px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.75em;">Copy User ID</button>
+
+    <!-- Big Mail / OTP Viewer Modal -->
+    <div id="mailReaderModal" class="mail-reader-modal">
+        <div class="mail-reader-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+                <h3 style="color: var(--success-green); font-size: 1.1em;">📩 OTP / Mail Details</h3>
+                <button onclick="closeMailReader()" style="background:var(--danger-red); color:#fff; border:none; padding:4px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">X</button>
             </div>
-            <button class="action-btn" onclick="closeMembershipModal()">Back to App</button>
+            <div style="margin-bottom: 10px; font-size: 0.8em;"><strong>From:</strong> <span id="readerSender" style="color:var(--warning-gold);">---</span></div>
+            <div style="margin-bottom: 10px; font-size: 0.8em;"><strong>Subject:</strong> <span id="readerSubject" style="color:var(--accent-blue);">---</span></div>
+            <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 8px; border: 1px solid var(--accent-blue); margin-bottom: 15px;">
+                <strong style="font-size: 0.75em; color: var(--text-muted); display: block; margin-bottom: 5px;">Message / OTP Content:</strong>
+                <div id="readerBody" style="font-size: 0.9em; word-break: break-all; color: #fff; line-height: 1.4;">Loading message body...</div>
+            </div>
+            <button class="action-btn" onclick="closeMailReader()">Close Window</button>
         </div>
     </div>
 
+    <!-- Admin Panel -->
     <div id="adminPanel">
         <div class="admin-header">
-            <h2>👑 ADMIN CONTROL PANEL</h2>
+            <h2>👑 LIVE USER TRACKING PANEL</h2>
             <button class="close-admin" onclick="toggleAdminPanel(false)">Close Panel</button>
         </div>
-        <div class="stats-grid">
-            <div class="stat-card"><h3>Total Active Users</h3><p id="adminTotalUsers">0</p></div>
-            <div class="stat-card"><h3>Total Generated Mails</h3><p id="adminTotalMails">0</p></div>
-        </div>
-        <h3 style="margin-bottom:10px; font-size:0.9em; color:var(--accent-blue);">User Management & Points Recharge</h3>
-        <div style="margin-bottom:15px; display:flex; gap:10px;">
-            <input type="text" id="adminTargetId" placeholder="Enter User ID..." style="padding:6px; background:rgba(0,0,0,0.5); border:1px solid var(--accent-blue); color:#fff; border-radius:6px; flex:2; font-size:0.8em;">
-            <input type="number" id="adminAddPoints" placeholder="Points" value="50" style="padding:6px; background:rgba(0,0,0,0.5); border:1px solid var(--accent-blue); color:#fff; border-radius:6px; width:70px; font-size:0.8em;">
-            <button onclick="adminRechargeUser()" style="background:var(--success-green); border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.8em;">Add Points</button>
-        </div>
+        <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--accent-blue);">Real-Time User Actions & Where They Are Logging In</h3>
         <div class="user-table-container">
             <table>
-                <thead><tr><th>User ID / Name</th><th>Points</th><th>Last Email</th><th>VIP</th></tr></thead>
+                <thead><tr><th>User ID / Name</th><th>Points</th><th>Current Active Mail</th><th>Last Action / Activity</th></tr></thead>
                 <tbody id="adminUserTableBody"></tbody>
             </table>
         </div>
     </div>
 
+    <!-- Main App Container -->
     <div class="main-container" id="mainApp">
         <div class="header">
             <div class="header-left">
                 <h1>DRACÓ MAIL</h1>
-                <p>Game & Social Verified Mails</p>
+                <p>All Apps & Games OTP Gateway</p>
             </div>
             <div class="header-btns">
-                <a href="https://t.me/DRACO_GOD" target="_blank" class="help-btn" title="Contact Support">💬 Help</a>
+                <a href="https://t.me/DRACO_GOD" target="_blank" class="help-btn" title="Support">💬 Help</a>
                 <button class="admin-trigger-btn" onclick="checkAdminAccess()">👑 Admin</button>
             </div>
         </div>
 
         <div class="status-bar">
             <span>Points: <span class="points-badge" id="userPoints">10</span></span>
-            <span>Status: <span class="vip-badge" id="userVipStatus">Standard</span></span>
-        </div>
-
-        <div class="membership-banner">
-            <span>Need more points or VIP Access?</span>
-            <button onclick="openMembershipModal()">Get VIP</button>
+            <span>Status: <span class="vip-badge" id="userVipStatus">Active</span></span>
         </div>
 
         <div class="email-display-section">
             <div class="email-box">
-                <span id="currentEmail">Generating...</span>
+                <span id="currentEmail">Generating fast letters...</span>
                 <button class="icon-btn" onclick="copyEmail()" title="Copy">📋</button>
             </div>
 
-            <div class="domain-label">Select Domain (8 Working Domains):</div>
+            <div class="domain-label">Select Domain & Best Usage:</div>
             <div class="domain-grid" id="domainGrid">
-                <button class="domain-btn active" onclick="setDomain('1secmail.com')">1secmail.com</button>
-                <button class="domain-btn" onclick="setDomain('1secmail.org')">1secmail.org</button>
-                <button class="domain-btn" onclick="setDomain('1secmail.net')">1secmail.net</button>
-                <button class="domain-btn" onclick="setDomain('esixt.com')">esixt.com</button>
-                <button class="domain-btn" onclick="setDomain('wwjmp.com')">wwjmp.com</button>
-                <button class="domain-btn" onclick="setDomain('vintomaper.com')">vintomaper.com</button>
-                <button class="domain-btn" onclick="setDomain('kepur.net')">kepur.net</button>
-                <button class="domain-btn" onclick="setDomain('moakt.cc')">moakt.cc</button>
+                <div class="domain-card active" onclick="setDomain('dracoggod.com', this)">
+                    <span class="domain-name">dracoggod.com</span>
+                    <span class="domain-tag tag-game">🎮 Best for Games / FF</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('gamermail.xyz', this)">
+                    <span class="domain-name">gamermail.xyz</span>
+                    <span class="domain-tag tag-game">🎮 Best for Free Fire / BGMI</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('otpinstant.net', this)">
+                    <span class="domain-name">otpinstant.net</span>
+                    <span class="domain-tag tag-insta">📸 Best for Instagram</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('1secmail.com', this)">
+                    <span class="domain-name">1secmail.com</span>
+                    <span class="domain-tag tag-fb">📘 Best for Facebook</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('1secmail.org', this)">
+                    <span class="domain-name">1secmail.org</span>
+                    <span class="domain-tag tag-app">⚡ Best for General Apps</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('1secmail.net', this)">
+                    <span class="domain-name">1secmail.net</span>
+                    <span class="domain-tag tag-app">⚡ Best for Other Apps</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('esixt.com', this)">
+                    <span class="domain-name">esixt.com</span>
+                    <span class="domain-tag tag-insta">📸 Best for Insta / Social</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('wwjmp.com', this)">
+                    <span class="domain-name">wwjmp.com</span>
+                    <span class="domain-tag tag-fb">📘 Best for Meta / FB</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('vintomaper.com', this)">
+                    <span class="domain-name">vintomaper.com</span>
+                    <span class="domain-tag tag-game">🎮 Best for Gaming</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('kepur.net', this)">
+                    <span class="domain-name">kepur.net</span>
+                    <span class="domain-tag tag-app">🚀 Fast OTP Delivery</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('moakt.cc', this)">
+                    <span class="domain-name">moakt.cc</span>
+                    <span class="domain-tag tag-app">🌐 Universal Working</span>
+                </div>
+                <div class="domain-card" onclick="setDomain('fastmail.fun', this)">
+                    <span class="domain-name">fastmail.fun</span>
+                    <span class="domain-tag tag-app">✨ Instant Verification</span>
+                </div>
             </div>
 
-            <button class="action-btn" onclick="generateNewEmail()">✨ Generate New Email (-1 Point)</button>
+            <button class="action-btn" onclick="generateNewEmail()">✨ Generate Letter-Only Mail</button>
         </div>
 
         <div class="inbox-section">
             <div class="inbox-header">
-                <h2 class="inbox-title" id="inboxTitle">📥 Inbox</h2>
-                <div class="nav-tabs">
-                    <span class="active" id="tabInbox" onclick="switchTab('inbox')">Inbox</span>
-                    <span id="tabTrash" onclick="switchTab('trash')">Trash (<span id="trashCount">0</span>)</span>
-                </div>
+                <h2 class="inbox-title">📥 Instant OTP Inbox</h2>
             </div>
             
             <div class="inbox-actions-bar">
-                <button class="refresh-btn" onclick="checkInbox()">🔄 <span id="refreshText">Refresh Inbox</span></button>
-                <span style="font-size:0.65em; color:var(--text-muted);">Auto-checking OTPs...</span>
+                <button class="refresh-btn" onclick="checkInbox()">🔄 <span id="refreshText">Check OTP Now</span></button>
+                <span style="font-size:0.65em; color:var(--text-muted);">Auto-fetching active...</span>
             </div>
 
             <ul class="email-list" id="inboxList">
-                <li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">Loading inbox...</li>
+                <li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">Inbox ready for OTP...</li>
             </ul>
         </div>
 
-        <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
+        <div class="footer">Secured Service by <strong>DRACÓ GOD</strong></div>
     </div>
         <script>
         const ADMIN_SECRET = "dracoadmin999";
@@ -386,16 +404,20 @@
         }
 
         let userData = JSON.parse(localStorage.getItem('draco_user_data_' + userId)) || {
-            id: userId, name: "User " + userId.substring(5), points: 10, isVip: false, lastEmail: 'None', totalGenerated: 0
+            id: userId, name: "User " + userId.substring(5), points: 50, isVip: true, lastEmail: 'None', lastAction: 'Initialized App'
         };
         saveUserData();
 
         function saveUserData() {
-            if(!userData.name) userData.name = "User " + userId.substring(5);
             localStorage.setItem('draco_user_data_' + userId, JSON.stringify(userData));
             let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
             globalUsers[userId] = userData;
             localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
+        }
+
+        function updateAction(actionText) {
+            userData.lastAction = actionText;
+            saveUserData();
         }
 
         function checkAdminAccess() {
@@ -413,111 +435,78 @@
         function loadAdminData() {
             let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
             let usersArray = Object.values(globalUsers);
-            document.getElementById('adminTotalUsers').innerText = usersArray.length;
-            document.getElementById('adminTotalMails').innerText = usersArray.reduce((acc, u) => acc + u.totalGenerated, 0);
-
             let tbody = document.getElementById('adminUserTableBody');
             tbody.innerHTML = "";
             usersArray.forEach(u => {
                 let tr = document.createElement('tr');
-                let displayName = u.name || ('User ' + u.id.substring(0, 6));
-                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id} <br><span style="font-size:0.8em; color:var(--warning-gold);">${displayName}</span></td>
+                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
                     <td style="color:var(--warning-gold); font-weight:bold;">${u.points}</td>
-                    <td style="font-size:0.65em;">${u.lastEmail}</td>
-                    <td>${u.isVip ? '👑 VIP' : 'Standard'}</td>`;
+                    <td style="font-size:0.65em; color:var(--success-green);">${u.lastEmail}</td>
+                    <td style="font-size:0.65em; color:#fff;">${u.lastAction || 'Active'}</td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        function adminRechargeUser() {
-            let targetId = document.getElementById('adminTargetId').value.trim();
-            let pts = parseInt(document.getElementById('adminAddPoints').value) || 0;
-            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
-            
-            if (globalUsers[targetId]) {
-                globalUsers[targetId].points += pts;
-                if(globalUsers[targetId].points > 50) globalUsers[targetId].isVip = true;
-                localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
-                alert("✅ Successfully added " + pts + " points to " + targetId);
-                loadAdminData();
-                if(targetId === userId) { userData = globalUsers[userId]; updateUIStatus(); }
-            } else { alert("❌ User ID not found in database!"); }
-        }
-
-        let selectedDomain = "1secmail.com";
+        let selectedDomain = "dracoggod.com";
         let currentLogin = "";
-        let activeTab = "inbox";
         let messages = [];
-        let trashBin = [];
 
-        function setDomain(domain) {
+        function setDomain(domain, element) {
             selectedDomain = domain;
-            document.querySelectorAll('.domain-btn').forEach(btn => {
-                if(btn.innerText === domain) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
+            document.querySelectorAll('.domain-card').forEach(card => card.classList.remove('active'));
+            if(element) element.classList.add('active');
+            
+            updateAction(`Switched domain to ${domain}`);
             generateNewEmail();
         }
 
-        function generateNewEmail() {
-            if (!userData.isVip && userData.points <= 0) {
-                alert("❌ Aapke points khatam ho gaye hain!");
-                openMembershipModal();
-                return;
+        // Pure Letter Generator (No Numbers Fast)
+        function generatePureLetters(length) {
+            let result = '';
+            let characters = 'abcdefghijklmnopqrstuvwxyz';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
             }
-            if (!userData.isVip) userData.points -= 1;
-            userData.totalGenerated += 1;
+            return result;
+        }
 
-            currentLogin = Math.random().toString(36).substring(2, 10);
+        function generateNewEmail() {
+            currentLogin = generatePureLetters(8);
             userData.lastEmail = currentLogin + "@" + selectedDomain;
+            updateAction(`Generated new mail: ${userData.lastEmail}`);
             saveUserData();
             updateUIStatus();
 
             document.getElementById('currentEmail').innerText = userData.lastEmail;
             messages = [];
-            trashBin = [];
             renderInbox();
         }
 
         function updateUIStatus() {
             document.getElementById('userPoints').innerText = userData.points;
-            document.getElementById('userVipStatus').innerText = userData.isVip ? 'VIP UNLIMITED' : 'Standard';
-            document.getElementById('myUserIdDisplay').innerText = userData.id;
         }
 
         function copyEmail() {
-            navigator.clipboard.writeText(document.getElementById('currentEmail').innerText);
-            alert('Email copied to clipboard!');
-        }
-
-        function copyUserId() {
-            navigator.clipboard.writeText(userId);
-            alert('User ID copied! Send this to Admin.');
-        }
-
-        function openMembershipModal() {
-            updateUIStatus();
-            document.getElementById('membershipModal').style.display = 'flex';
-        }
-
-        function closeMembershipModal() {
-            document.getElementById('membershipModal').style.display = 'none';
+            let emailText = document.getElementById('currentEmail').innerText;
+            navigator.clipboard.writeText(emailText);
+            updateAction(`Copied email to clipboard: ${emailText}`);
+            alert('✅ Email copied! Paste it into the app/game to receive OTP.');
         }
 
         function checkInbox() {
             if (!currentLogin) return;
-            
             let btnText = document.getElementById('refreshText');
-            btnText.innerText = "Checking...";
+            btnText.innerText = "Checking OTP...";
+            updateAction(`Requested inbox check for ${currentLogin}@${selectedDomain}`);
 
             let targetUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
 
             fetch(targetUrl, { mode: 'cors' })
                 .then(res => res.json())
                 .then(data => {
-                    btnText.innerText = "Refresh Inbox";
+                    btnText.innerText = "Check OTP Now";
                     if(Array.isArray(data)) {
-                        let existingIds = [...messages, ...trashBin].map(m => m.id);
+                        let existingIds = messages.map(m => m.id);
                         data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
                         renderInbox();
                     }
@@ -527,54 +516,74 @@
                     fetch(fallbackUrl)
                         .then(res => res.json())
                         .then(data => {
-                            btnText.innerText = "Refresh Inbox";
+                            btnText.innerText = "Check OTP Now";
                             if(Array.isArray(data)) {
-                                let existingIds = [...messages, ...trashBin].map(m => m.id);
+                                let existingIds = messages.map(m => m.id);
                                 data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
                                 renderInbox();
                             }
                         })
                         .catch(e => {
-                            btnText.innerText = "Refresh Inbox";
-                            console.log("All fetch methods failed", e);
+                            btnText.innerText = "Check OTP Now";
+                            console.log("Fetch error", e);
                         });
                 });
         }
 
-        function deleteMessage(id) {
-            let index = messages.findIndex(m => m.id === id);
-            if (index !== -1) { trashBin.push(messages.splice(index, 1)[0]); renderInbox(); }
+        function openMailDetails(id) {
+            let msg = messages.find(m => m.id === id);
+            if(!msg) return;
+            
+            updateAction(`Opened message from: ${msg.from}`);
+            document.getElementById('readerSender').innerText = msg.from;
+            document.getElementById('readerSubject').innerText = msg.subject;
+            document.getElementById('readerBody').innerText = "Fetching full OTP message content...";
+            document.getElementById('mailReaderModal').style.display = 'flex';
+
+            let bodyUrl = `https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${selectedDomain}&id=${id}`;
+            fetch(bodyUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.body) {
+                        document.getElementById('readerBody').innerHTML = data.body;
+                    } else {
+                        document.getElementById('readerBody').innerText = "Failed to load body text directly.";
+                    }
+                })
+                .catch(err => {
+                    let fallbackBodyUrl = `https://corsproxy.io/?` + encodeURIComponent(bodyUrl);
+                    fetch(fallbackBodyUrl)
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data && data.body) {
+                                document.getElementById('readerBody').innerHTML = data.body;
+                            } else {
+                                document.getElementById('readerBody').innerText = "Could not fetch message body.";
+                            }
+                        })
+                        .catch(e => {
+                            document.getElementById('readerBody').innerText = "Error loading content. Please check connection.";
+                        });
+                });
         }
 
-        function recoverMessage(id) {
-            let index = trashBin.findIndex(m => m.id === id);
-            if (index !== -1) { messages.push(trashBin.splice(index, 1)[0]); renderInbox(); }
-        }
-
-        function switchTab(tab) {
-            activeTab = tab;
-            document.getElementById('tabInbox').className = tab === 'inbox' ? 'active' : '';
-            document.getElementById('tabTrash').className = tab === 'trash' ? 'active' : '';
-            document.getElementById('inboxTitle').innerText = tab === 'inbox' ? '📥 Inbox' : '🗑️ Trash Bin';
-            renderInbox();
+        function closeMailReader() {
+            document.getElementById('mailReaderModal').style.display = 'none';
         }
 
         function renderInbox() {
             let list = document.getElementById('inboxList');
-            let currentList = activeTab === 'inbox' ? messages : trashBin;
-            document.getElementById('trashCount').innerText = trashBin.length;
-            
             list.innerHTML = "";
-            if (currentList.length === 0) {
-                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty. Click Refresh if expecting OTP.' : 'Trash is empty.'}</li>`;
+            if (messages.length === 0) {
+                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">No OTP received yet. Send OTP from app/game and click Check OTP.</li>`;
                 return;
             }
 
-            currentList.forEach(msg => {
+            messages.forEach(msg => {
                 let li = document.createElement('li');
                 li.className = 'email-item';
-                li.innerHTML = `<div class="email-info"><span class="email-sender">${msg.from}</span><span class="email-subject">${msg.subject}</span></div>
-                    <div class="mail-actions">${activeTab === 'inbox' ? `<button class="delete-btn" onclick="deleteMessage(${msg.id})" title="Delete">🗑️</button>` : `<button class="recover-btn" onclick="recoverMessage(${msg.id})" title="Recover">♻️</button>`}</div>`;
+                li.onclick = () => openMailDetails(msg.id);
+                li.innerHTML = `<div class="email-info"><span class="email-sender">From: ${msg.from}</span><span class="email-subject">${msg.subject}</span></div><span style="font-size:0.7em; color:var(--success-green); font-weight:bold;">View OTP 🔍</span>`;
                 list.appendChild(li);
             });
         }
@@ -582,7 +591,7 @@
         window.onload = function() {
             updateUIStatus();
             generateNewEmail();
-            setInterval(checkInbox, 8000);
+            setInterval(checkInbox, 6000);
         };
     </script>
 </body>
