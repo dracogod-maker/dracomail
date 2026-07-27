@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRACÓ GOD :: Premium Temp Mail</title>
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --accent-blue: #00f2ff;
+            --glow-color: rgba(0, 242, 255, 0.3);
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 0 40px var(--glow-color), 
+                        0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--glow-color) 0%, transparent 60%);
+            z-index: -1;
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-blue);
+            text-shadow: 0 0 10px var(--accent-blue);
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .email-display-section {
+            margin-bottom: 25px;
+        }
+
+        .email-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--accent-blue);
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 10px var(--glow-color);
+        }
+
+        #currentEmail {
+            color: var(--accent-blue);
+            font-size: 1.1em;
+            font-weight: bold;
+            word-break: break-all;
+            letter-spacing: 0.5px;
+            margin-right: 10px;
+            text-align: left;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.2em;
+            transition: 0.3s;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent-blue);
+            transform: scale(1.1);
+        }
+
+        /* Domain Selection Grid (Multiple Options) */
+        .domain-section {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .domain-title {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .domain-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .domain-btn {
+            background: rgba(0, 242, 255, 0.08);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            color: var(--text-main);
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .domain-btn:hover, .domain-btn.active {
+            background: var(--accent-blue);
+            color: #000;
+            box-shadow: 0 0 15px var(--glow-color);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            text-transform: uppercase;
+            background: linear-gradient(45deg, #007bff, var(--accent-blue));
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .inbox-section {
+            margin-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .inbox-title {
+            color: var(--text-main);
+            font-size: 1em;
+        }
+
+        .refresh-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-blue);
+            cursor: pointer;
+            font-size: 0.85em;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .refresh-btn:hover {
+            text-decoration: underline;
+        }
+
+        .email-list {
+            list-style: none;
+        }
+
+        .email-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .email-sender { font-weight: bold; color: var(--text-main); font-size: 0.9em; }
+        .email-subject { color: var(--accent-blue); display: block; margin: 3px 0; font-size: 0.85em; }
+        .email-snippet { color: var(--text-muted); font-size: 0.8em; }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.8em;
+        }
+        .footer strong { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="header">
+            <h1>DRACÓ MAIL</h1>
+            <p>Powered by DRACÓ GOD</p>
+        </div>
+
+        <!-- Email Generation Section -->
+        <div class="email-display-section">
+            <div class="email-box">
+                <span id="currentEmail">Loading...</span>
+                <button class="icon-btn" onclick="copyEmail()" title="Copy Email">📋</button>
+            </div>
+
+            <!-- Domain Selection Options (jaise bot me hain) -->
+            <div class="domain-section">
+                <div class="domain-title">Select Domain:</div>
+                <div class="domain-grid">
+                    <button class="domain-btn active" onclick="changeDomain('@dracomail.xyz', this)">@dracomail.xyz</button>
+                    <button class="domain-btn" onclick="changeDomain('@dracomail.pro', this)">@dracomail.pro</button>
+                    <button class="domain-btn" onclick="changeDomain('@dracomail.org', this)">@dracomail.org</button>
+                    <button class="domain-btn" onclick="changeDomain('@dracomail.co', this)">@dracomail.co</button>
+                    <button class="domain-btn" onclick="changeDomain('@usefulmail.com', this)">@usefulmail.com</button>
+                    <button class="domain-btn" onclick="changeDomain('@dracohub.com', this)">@dracohub.com</button>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="generateNewEmail()">✨ Generate New Email</button>
+        </div>
+
+        <!-- Inbox Section -->
+        <div class="inbox-section">
+            <div class="inbox-header">
+                <h2 class="inbox-title">📥 Inbox</h2>
+                <button class="refresh-btn" onclick="checkInbox()"><span>🔄</span> Refresh</button>
+            </div>
+            <ul class="email-list" id="inboxList">
+                <li class="email-item">
+                    <span class="email-sender">no-reply@instagram.com</span>
+                    <span class="email-subject">751092 is your Instagram code</span>
+                    <span class="email-snippet">Someone tried to sign up for an Instagram account...</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
+
+    <script>
+        let selectedDomain = "@dracomail.xyz";
+
+        function makeid(length) {
+            let result = '';
+            let characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        }
+
+        function changeDomain(domain, btnElement) {
+            selectedDomain = domain;
+            
+            // Remove active class from all buttons
+            let buttons = document.querySelectorAll('.domain-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            btnElement.classList.add('active');
+            
+            // Generate new email with selected domain
+            generateNewEmail();
+        }
+
+        function generateNewEmail() {
+            let randomId = makeid(8);
+            let newEmail = randomId + selectedDomain;
+            document.getElementById('currentEmail').innerText = newEmail;
+            localStorage.setItem('tempEmail', newEmail);
+            localStorage.setItem('tempDomain', selectedDomain);
+        }
+
+        window.onload = function() {
+            let savedDomain = localStorage.getItem('tempDomain');
+            let savedEmail = localStorage.getItem('tempEmail');
+            
+            if(savedDomain) {
+                selectedDomain = savedDomain;
+                // Highlight active button based on saved domain
+                let buttons = document.querySelectorAll('.domain-btn');
+                buttons.forEach(btn => {
+                    if(btn.innerText === savedDomain) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            if(savedEmail) {
+                document.getElementById('currentEmail').innerText = savedEmail;
+            } else {
+                generateNewEmail();
+            }
+        };
+
+        function copyEmail() {
+            let email = document.getElementById('currentEmail').innerText;
+            navigator.clipboard.writeText(email).then(() => {
+                alert('Email copied to clipboard!');
+            });
+        }
+
+        function checkInbox() {
+            alert("Live API connected nahi hai. Real emails ke liye backend API ki zaroorat padegi!");
+        }
+    </script>
+</body>
+</html>
