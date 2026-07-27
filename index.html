@@ -190,6 +190,24 @@
         .inbox-section { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; text-align: left; }
         .inbox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .inbox-title { color: var(--text-main); font-size: 0.85em; }
+        
+        .inbox-actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .refresh-btn {
+            background: rgba(0, 242, 255, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
+
         .nav-tabs { display: flex; gap: 8px; font-size: 0.75em; }
         .nav-tabs span { cursor: pointer; color: var(--text-muted); }
         .nav-tabs span.active { color: var(--accent-blue); font-weight: bold; }
@@ -271,7 +289,7 @@
         </div>
         <div class="user-table-container">
             <table>
-                <thead><tr><th>User ID</th><th>Points</th><th>Last Email</th><th>VIP</th></tr></thead>
+                <thead><tr><th>User ID / Name</th><th>Points</th><th>Last Email</th><th>VIP</th></tr></thead>
                 <tbody id="adminUserTableBody"></tbody>
             </table>
         </div>
@@ -325,6 +343,12 @@
                     <span id="tabTrash" onclick="switchTab('trash')">Trash (<span id="trashCount">0</span>)</span>
                 </div>
             </div>
+            
+            <div class="inbox-actions-bar">
+                <button class="refresh-btn" onclick="checkInbox()">🔄 Refresh Inbox</button>
+                <span style="font-size:0.65em; color:var(--text-muted);">Auto-checking OTPs...</span>
+            </div>
+
             <ul class="email-list" id="inboxList">
                 <li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">Loading inbox...</li>
             </ul>
@@ -337,16 +361,17 @@
         const ADMIN_SECRET = "dracoadmin999";
         let userId = localStorage.getItem('draco_user_id');
         if (!userId) {
-            userId = 'DRACÓ-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            userId = 'USER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
             localStorage.setItem('draco_user_id', userId);
         }
 
         let userData = JSON.parse(localStorage.getItem('draco_user_data_' + userId)) || {
-            id: userId, points: 10, isVip: false, lastEmail: 'None', totalGenerated: 0
+            id: userId, name: "User " + userId.substring(5), points: 10, isVip: false, lastEmail: 'None', totalGenerated: 0
         };
         saveUserData();
 
         function saveUserData() {
+            if(!userData.name) userData.name = "User " + userId.substring(5);
             localStorage.setItem('draco_user_data_' + userId, JSON.stringify(userData));
             let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
             globalUsers[userId] = userData;
@@ -375,7 +400,8 @@
             tbody.innerHTML = "";
             usersArray.forEach(u => {
                 let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
+                let displayName = u.name || ('User ' + u.id.substring(0, 6));
+                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id} <br><span style="font-size:0.8em; color:var(--warning-gold);">${displayName}</span></td>
                     <td style="color:var(--warning-gold); font-weight:bold;">${u.points}</td>
                     <td style="font-size:0.65em;">${u.lastEmail}</td>
                     <td>${u.isVip ? '👑 VIP' : 'Standard'}</td>`;
@@ -496,7 +522,7 @@
             
             list.innerHTML = "";
             if (currentList.length === 0) {
-                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty.' : 'Trash is empty.'}</li>`;
+                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty. Click Refresh if expecting OTP.' : 'Trash is empty.'}</li>`;
                 return;
             }
 
@@ -512,7 +538,7 @@
         window.onload = function() {
             updateUIStatus();
             generateNewEmail();
-            setInterval(checkInbox, 10000);
+            setInterval(checkInbox, 8000);
         };
     </script>
 </body>
