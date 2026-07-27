@@ -3,17 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRACÓ MAIL :: Secure Temp Mail</title>
+    <title>DRACÓ MAIL PRO :: Advanced Temp Mail & Panel</title>
     <style>
         :root {
             --bg-color: #05070a;
-            --card-bg: rgba(10, 20, 30, 0.75);
+            --card-bg: rgba(10, 20, 30, 0.85);
             --accent-blue: #00f2ff;
             --glow-color: rgba(0, 242, 255, 0.3);
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --danger-red: #ff4757;
             --success-green: #2ed573;
+            --warning-gold: #ffa502;
         }
 
         * {
@@ -30,11 +31,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
         }
 
-        /* Access Key Modal */
-        #authModal {
+        /* Modals */
+        .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5, 7, 10, 0.95);
@@ -43,98 +44,124 @@
             align-items: center;
             z-index: 9999;
         }
-        .auth-box {
+        .modal-box {
             background: var(--card-bg);
             border: 2px solid var(--accent-blue);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 0 30px var(--glow-color);
             width: 90%;
-            max-width: 350px;
+            max-width: 400px;
         }
-        .auth-box h2 { color: var(--accent-blue); margin-bottom: 15px; font-size: 1.4em; }
-        .auth-box input {
-            width: 100%; padding: 10px; background: rgba(0,0,0,0.5);
+        .modal-box h2 { color: var(--accent-blue); margin-bottom: 12px; font-size: 1.3em; }
+        .modal-box input, .modal-box select {
+            width: 100%; padding: 10px; background: rgba(0,0,0,0.6);
             border: 1px solid var(--accent-blue); border-radius: 8px;
-            color: #fff; margin-bottom: 15px; text-align: center; font-size: 1em;
+            color: #fff; margin-bottom: 12px; text-align: center; font-size: 0.95em;
         }
 
         .main-container {
             background: var(--card-bg);
             backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            padding: 20px;
+            padding: 18px;
             width: 100%;
-            max-width: 440px;
+            max-width: 450px;
             text-align: center;
-            box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: none; /* Hidden until key is entered */
+            box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.6);
+            display: none;
         }
 
-        .header h1 {
-            font-size: 1.8em;
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .header-left h1 {
+            font-size: 1.5em;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--accent-blue);
             text-shadow: 0 0 10px var(--accent-blue);
-            margin-bottom: 2px;
+            text-align: left;
         }
-        .header p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.8em; }
+        .header-left p { color: var(--text-muted); font-size: 0.7em; text-align: left; }
+        
+        .admin-trigger-btn {
+            background: rgba(255, 165, 2, 0.2);
+            border: 1px solid var(--warning-gold);
+            color: var(--warning-gold);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75em;
+            font-weight: bold;
+        }
 
-        .email-box {
-            background: rgba(0, 0, 0, 0.4);
-            border: 2px solid var(--accent-blue);
+        /* User Status Bar */
+        .status-bar {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 10px;
-            padding: 10px 12px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            font-size: 0.85em;
+        }
+        .points-badge { color: var(--warning-gold); font-weight: bold; }
+        .vip-badge { color: var(--success-green); font-weight: bold; text-transform: uppercase; }
+
+        .email-box {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid var(--accent-blue);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
             box-shadow: inset 0 0 10px var(--glow-color);
         }
 
         #currentEmail {
             color: var(--accent-blue);
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: bold;
             word-break: break-all;
             text-align: left;
         }
 
-        .icon-btn {
-            background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em;
-        }
+        .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em; }
         .icon-btn:hover { color: var(--accent-blue); }
 
-        .domain-label {
-            font-size: 0.8em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
-        }
+        .domain-label { font-size: 0.75em; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
 
         .domain-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+            margin-bottom: 12px;
         }
 
         .domain-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-muted);
-            padding: 8px;
-            border-radius: 8px;
+            padding: 6px 2px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.8em;
+            font-size: 0.65em;
             transition: 0.3s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .domain-btn.active {
             background: var(--accent-blue);
             color: #000;
             font-weight: bold;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 10px var(--glow-color);
+            box-shadow: 0 0 8px var(--glow-color);
         }
 
         .action-btn {
@@ -144,17 +171,39 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
             background: linear-gradient(45deg, #007bff, var(--accent-blue));
             color: #000;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .membership-banner {
+            background: linear-gradient(135deg, rgba(255,165,2,0.15), rgba(255,71,87,0.15));
+            border: 1px dashed var(--warning-gold);
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 12px;
+            font-size: 0.75em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .membership-banner button {
+            background: var(--warning-gold);
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #000;
+            font-size: 0.9em;
         }
 
         .inbox-section {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 12px;
+            padding-top: 10px;
             text-align: left;
         }
 
@@ -162,40 +211,62 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .inbox-title { color: var(--text-main); font-size: 0.9em; }
-        
-        .nav-tabs { display: flex; gap: 10px; font-size: 0.8em; }
+        .inbox-title { color: var(--text-main); font-size: 0.85em; }
+        .nav-tabs { display: flex; gap: 8px; font-size: 0.75em; }
         .nav-tabs span { cursor: pointer; color: var(--text-muted); }
         .nav-tabs span.active { color: var(--accent-blue); font-weight: bold; }
 
-        .email-list { list-style: none; max-height: 160px; overflow-y: auto; }
+        .email-list { list-style: none; max-height: 140px; overflow-y: auto; }
         
         .email-item {
             background: rgba(255, 255, 255, 0.03);
-            padding: 8px;
-            border-radius: 8px;
-            margin-bottom: 6px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            margin-bottom: 5px;
             border-left: 3px solid var(--accent-blue);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .email-info { font-size: 0.75em; width: 75%; }
+        .email-info { font-size: 0.7em; width: 75%; }
         .email-sender { font-weight: bold; color: var(--text-main); display: block; }
         .email-subject { color: var(--accent-blue); }
 
-        .mail-actions button {
-            background: none; border: none; cursor: pointer; font-size: 1em; padding: 2px 5px;
-        }
+        .mail-actions button { background: none; border: none; cursor: pointer; font-size: 0.9em; padding: 2px 4px; }
         .delete-btn { color: var(--danger-red); }
         .recover-btn { color: var(--success-green); }
 
+        /* Admin Dashboard Styles */
+        #adminPanel {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.98);
+            z-index: 10000;
+            padding: 20px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .admin-header h2 { color: var(--warning-gold); }
+        .close-admin { background: var(--danger-red); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+        .stat-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .stat-card h3 { font-size: 0.75em; color: var(--text-muted); }
+        .stat-card p { font-size: 1.2em; color: var(--accent-blue); font-weight: bold; margin-top: 5px; }
+
+        .user-table-container { background: rgba(0,0,0,0.4); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); padding: 10px; max-height: 300px; overflow-y: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: var(--warning-gold); }
+
         .footer {
-            margin-top: 15px;
+            margin-top: 10px;
             color: rgba(255, 255, 255, 0.2);
-            font-size: 0.75em;
+            font-size: 0.7em;
             text-align: center;
         }
         .footer strong { color: var(--accent-blue); }
@@ -203,19 +274,86 @@
 </head>
 <body>
 
-    <!-- Secret Key Authentication Modal -->
-    <div id="authModal">
-        <div class="auth-box">
+    <!-- Access Key Modal -->
+    <div id="authModal" class="modal-overlay">
+        <div class="modal-box">
             <h2>🔒 Enter Access Key</h2>
             <input type="password" id="accessKeyInput" placeholder="Enter Secret Key...">
             <button class="action-btn" onclick="verifyKey()">Unlock Site</button>
         </div>
     </div>
 
+    <!-- Membership Modal -->
+    <div id="membershipModal" class="modal-overlay" style="display: none;">
+        <div class="modal-box">
+            <h2>💎 VIP Membership</h2>
+            <p style="font-size:0.8em; color:var(--text-muted); margin-bottom:15px;">Aapke points khatam ho gaye hain! Recharge ke liye apna User ID copy karke Admin ko bhejein.</p>
+            <div style="background:rgba(0,0,0,0.5); padding:10px; border-radius:8px; margin-bottom:15px; border:1px solid var(--warning-gold);">
+                <span style="font-size:0.75em; color:var(--text-muted); display:block;">Your Unique User ID:</span>
+                <strong id="myUserIdDisplay" style="color:var(--accent-blue); font-size:0.9em; word-break:break-all;">---</strong>
+                <button onclick="copyUserId()" style="margin-top:5px; background:var(--accent-blue); border:none; padding:3px 8px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:0.75em;">Copy User ID</button>
+            </div>
+            <button class="action-btn" onclick="closeMembershipModal()">Back to App</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel">
+        <div class="admin-header">
+            <h2>👑 ADMIN CONTROL PANEL</h2>
+            <button class="close-admin" onclick="toggleAdminPanel(false)">Close Panel</button>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Active Users</h3>
+                <p id="adminTotalUsers">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Generated Mails</h3>
+                <p id="adminTotalMails">0</p>
+            </div>
+        </div>
+        <h3 style="margin-bottom:10px; font-size:0.9em; color:var(--accent-blue);">User Management & Points Recharge</h3>
+        <div style="margin-bottom:15px; display:flex; gap:10px;">
+            <input type="text" id="adminTargetId" placeholder="Enter User ID..." style="padding:6px; background:rgba(0,0,0,0.5); border:1px solid var(--accent-blue); color:#fff; border-radius:6px; flex:2; font-size:0.8em;">
+            <input type="number" id="adminAddPoints" placeholder="Points" value="50" style="padding:6px; background:rgba(0,0,0,0.5); border:1px solid var(--accent-blue); color:#fff; border-radius:6px; width:70px; font-size:0.8em;">
+            <button onclick="adminRechargeUser()" style="background:var(--success-green); border:none; padding:6px 12px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.8em;">Add Points</button>
+        </div>
+        <div class="user-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Points</th>
+                        <th>Last Email</th>
+                        <th>VIP</th>
+                    </tr>
+                </thead>
+                <tbody id="adminUserTableBody">
+                    <!-- Dynamic Rows -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
     <div class="main-container" id="mainApp">
         <div class="header">
-            <h1>DRACÓ MAIL</h1>
-            <p>Powered by DRACÓ GOD</p>
+            <div class="header-left">
+                <h1>DRACÓ MAIL</h1>
+                <p>Game & Social Verified Mails</p>
+            </div>
+            <button class="admin-trigger-btn" onclick="checkAdminAccess()">👑 Admin</button>
+        </div>
+
+        <div class="status-bar">
+            <span>Points: <span class="points-badge" id="userPoints">10</span></span>
+            <span>Status: <span class="vip-badge" id="userVipStatus">Standard</span></span>
+        </div>
+
+        <div class="membership-banner">
+            <span>Need more points or VIP Access?</span>
+            <button onclick="openMembershipModal()">Get VIP</button>
         </div>
 
         <div class="email-display-section">
@@ -224,17 +362,19 @@
                 <button class="icon-btn" onclick="copyEmail()" title="Copy">📋</button>
             </div>
 
-            <div class="domain-label">Select Domain:</div>
+            <div class="domain-label">Select Domain (8 Working Domains):</div>
             <div class="domain-grid" id="domainGrid">
-                <button class="domain-btn active" onclick="setDomain('dracomail.xyz')">@dracomail.xyz</button>
-                <button class="domain-btn" onclick="setDomain('dracomail.pro')">@dracomail.pro</button>
-                <button class="domain-btn" onclick="setDomain('dracomail.org')">@dracomail.org</button>
-                <button class="domain-btn" onclick="setDomain('dracomail.co')">@dracomail.co</button>
-                <button class="domain-btn" onclick="setDomain('usefulmail.online')">@usefulmail.online</button>
-                <button class="domain-btn" onclick="setDomain('dracohub.com')">@dracohub.com</button>
+                <button class="domain-btn active" onclick="setDomain('1secmail.com')">1secmail.com</button>
+                <button class="domain-btn" onclick="setDomain('1secmail.org')">1secmail.org</button>
+                <button class="domain-btn" onclick="setDomain('1secmail.net')">1secmail.net</button>
+                <button class="domain-btn" onclick="setDomain('esixt.com')">esixt.com</button>
+                <button class="domain-btn" onclick="setDomain('wwjmp.com')">wwjmp.com</button>
+                <button class="domain-btn" onclick="setDomain('vintomaper.com')">vintomaper.com</button>
+                <button class="domain-btn" onclick="setDomain('kepur.net')">kepur.net</button>
+                <button class="domain-btn" onclick="setDomain('moakt.cc')">moakt.cc</button>
             </div>
 
-            <button class="action-btn" onclick="generateNewEmail()">✨ Generate New Email</button>
+            <button class="action-btn" onclick="generateNewEmail()">✨ Generate New Email (-1 Point)</button>
         </div>
 
         <div class="inbox-section">
@@ -254,9 +394,30 @@
     </div>
 
     <script>
-        // --- SECRET KEY CONFIGURATION ---
-        // Yahan apni pasand ki key daal do jo public me kisi ko pata na chale
-        const SECRET_ACCESS_KEY = "dracogod123"; 
+        const SECRET_ACCESS_KEY = "dracogod123";
+        const ADMIN_SECRET = "dracoadmin999";
+
+        let userId = localStorage.getItem('draco_user_id');
+        if (!userId) {
+            userId = 'DRACÓ-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+            localStorage.setItem('draco_user_id', userId);
+        }
+
+        let userData = JSON.parse(localStorage.getItem('draco_user_data_' + userId)) || {
+            id: userId,
+            points: 10,
+            isVip: false,
+            lastEmail: 'None',
+            totalGenerated: 0
+        };
+        saveUserData();
+
+        function saveUserData() {
+            localStorage.setItem('draco_user_data_' + userId, JSON.stringify(userData));
+            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
+            globalUsers[userId] = userData;
+            localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
+        }
 
         function verifyKey() {
             let enteredKey = document.getElementById('accessKeyInput').value;
@@ -269,118 +430,51 @@
             }
         }
 
-        // --- TEMP MAIL LOGIC ---
-        let selectedDomain = "dracomail.xyz";
-        let currentLogin = "";
-        let activeTab = "inbox";
-        let messages = [];
-        let trashBin = [];
-
-        function setDomain(domain) {
-            selectedDomain = domain;
-            document.querySelectorAll('.domain-btn').forEach(btn => {
-                if(btn.innerText.includes(domain)) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-            generateNewEmail();
+        function checkAdminAccess() {
+            let pass = prompt("Enter Admin Password:");
+            if (pass === ADMIN_SECRET) {
+                toggleAdminPanel(true);
+            } else if (pass !== null) {
+                alert("❌ Incorrect Admin Password!");
+            }
         }
 
-        function generateNewEmail() {
-            let randomName = Math.random().toString(36).substring(2, 10);
-            currentLogin = randomName;
-            let fullEmail = currentLogin + "@" + selectedDomain;
-            document.getElementById('currentEmail').innerText = fullEmail;
-            messages = [];
-            trashBin = [];
-            renderInbox();
+        function toggleAdminPanel(show) {
+            let panel = document.getElementById('adminPanel');
+            panel.style.display = show ? 'block' : 'none';
+            if (show) loadAdminData();
         }
 
-        function copyEmail() {
-            let email = document.getElementById('currentEmail').innerText;
-            navigator.clipboard.writeText(email);
-            alert('Email copied to clipboard!');
-        }
-
-        function checkInbox() {
-            if (!currentLogin) return;
-            let url = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
+        function loadAdminData() {
+            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
+            let usersArray = Object.values(globalUsers);
+            document.getElementById('adminTotalUsers').innerText = usersArray.length;
             
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    if(Array.isArray(data)) {
-                        // Check if new message arrived
-                        let existingIds = [...messages, ...trashBin].map(m => m.id);
-                        data.forEach(msg => {
-                            if(!existingIds.includes(msg.id)) {
-                                messages.push(msg);
-                            }
-                        });
-                        renderInbox();
-                    }
-                }).catch(err => console.log(err));
-        }
+            let totalMails = usersArray.reduce((acc, u) => acc + u.totalGenerated, 0);
+            document.getElementById('adminTotalMails').innerText = totalMails;
 
-        function deleteMessage(id) {
-            let index = messages.findIndex(m => m.id === id);
-            if (index !== -1) {
-                let deleted = messages.splice(index, 1)[0];
-                trashBin.push(deleted);
-                renderInbox();
-            }
-        }
-
-        function recoverMessage(id) {
-            let index = trashBin.findIndex(m => m.id === id);
-            if (index !== -1) {
-                let recovered = trashBin.splice(index, 1)[0];
-                messages.push(recovered);
-                renderInbox();
-            }
-        }
-
-        function switchTab(tab) {
-            activeTab = tab;
-            document.getElementById('tabInbox').className = tab === 'inbox' ? 'active' : '';
-            document.getElementById('tabTrash').className = tab === 'trash' ? 'active' : '';
-            document.getElementById('inboxTitle').innerText = tab === 'inbox' ? '📥 Inbox' : '🗑️ Trash Bin';
-            renderInbox();
-        }
-
-        function renderInbox() {
-            let list = document.getElementById('inboxList');
-            let currentList = activeTab === 'inbox' ? messages : trashBin;
-            document.getElementById('trashCount').innerText = trashBin.length;
-            
-            list.innerHTML = "";
-            if (currentList.length === 0) {
-                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty.' : 'Trash is empty.'}</li>`;
-                return;
-            }
-
-            currentList.forEach(msg => {
-                let li = document.createElement('li');
-                li.className = 'email-item';
-                li.innerHTML = `
-                    <div class="email-info">
-                        <span class="email-sender">${msg.from}</span>
-                        <span class="email-subject">${msg.subject}</span>
-                    </div>
-                    <div class="mail-actions">
-                        ${activeTab === 'inbox' ? 
-                            `<button class="delete-btn" onclick="deleteMessage(${msg.id})" title="Delete">🗑️</button>` : 
-                            `<button class="recover-btn" onclick="recoverMessage(${msg.id})" title="Recover">♻️</button>`
-                        }
-                    </div>
+            let tbody = document.getElementById('adminUserTableBody');
+            tbody.innerHTML = "";
+            usersArray.forEach(u => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
+                    <td style="color:var(--warning-gold); font-weight:bold;">${u.points}</td>
+                    <td style="font-size:0.65em;">${u.lastEmail}</td>
+                    <td>${u.isVip ? '👑 VIP' : 'Standard'}</td>
                 `;
-                list.appendChild(li);
+                tbody.appendChild(tr);
             });
         }
 
-        function initMailSystem() {
-            generateNewEmail();
-            setInterval(checkInbox, 10000);
-        }
-    </script>
-</body>
-</html>
+        function adminRechargeUser() {
+            let targetId = document.getElementById('adminTargetId').value.trim();
+            let pts = parseInt(document.getElementById('adminAddPoints').value) || 0;
+            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
+            
+            if (globalUsers[targetId]) {
+                globalUsers[targetId].points += pts;
+                if(globalUsers[targetId].points > 50) globalUsers[targetId].isVip = true;
+                localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
+                alert("✅ Successfully added " + pts + " points to " + targetId);
+                loadAdminData()
