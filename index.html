@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRACÓ MAIL :: Premium Temp Mail</title>
+    <title>DRACÓ MAIL :: Secure Temp Mail</title>
     <style>
         :root {
             --bg-color: #05070a;
-            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(10, 20, 30, 0.75);
             --accent-blue: #00f2ff;
             --glow-color: rgba(0, 242, 255, 0.3);
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
+            --danger-red: #ff4757;
+            --success-green: #2ed573;
         }
 
         * {
@@ -28,7 +30,34 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
+        }
+
+        /* Access Key Modal */
+        #authModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .auth-box {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-blue);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 30px var(--glow-color);
+            width: 90%;
+            max-width: 350px;
+        }
+        .auth-box h2 { color: var(--accent-blue); margin-bottom: 15px; font-size: 1.4em; }
+        .auth-box input {
+            width: 100%; padding: 10px; background: rgba(0,0,0,0.5);
+            border: 1px solid var(--accent-blue); border-radius: 8px;
+            color: #fff; margin-bottom: 15px; text-align: center; font-size: 1em;
         }
 
         .main-container {
@@ -36,40 +65,29 @@
             backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             width: 100%;
-            max-width: 480px;
+            max-width: 440px;
             text-align: center;
-            box-shadow: 0 0 40px var(--glow-color), 
-                        0 10px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: none; /* Hidden until key is entered */
         }
 
         .header h1 {
-            font-size: 2.2em;
+            font-size: 1.8em;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--accent-blue);
             text-shadow: 0 0 10px var(--accent-blue);
-            margin-bottom: 5px;
+            margin-bottom: 2px;
         }
-
-        .header p {
-            color: var(--text-muted);
-            margin-bottom: 20px;
-            font-size: 0.9em;
-        }
-
-        .email-display-section {
-            margin-bottom: 25px;
-        }
+        .header p { color: var(--text-muted); margin-bottom: 15px; font-size: 0.8em; }
 
         .email-box {
             background: rgba(0, 0, 0, 0.4);
             border: 2px solid var(--accent-blue);
             border-radius: 10px;
-            padding: 12px 15px;
+            padding: 10px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -79,50 +97,64 @@
 
         #currentEmail {
             color: var(--accent-blue);
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: bold;
             word-break: break-all;
             text-align: left;
         }
 
         .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 1.2em;
-            transition: 0.3s;
+            background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em;
+        }
+        .icon-btn:hover { color: var(--accent-blue); }
+
+        .domain-label {
+            font-size: 0.8em; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;
         }
 
-        .icon-btn:hover {
-            color: var(--accent-blue);
-            transform: scale(1.1);
+        .domain-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .domain-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: 0.3s;
+        }
+        .domain-btn.active {
+            background: var(--accent-blue);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 10px var(--glow-color);
         }
 
         .action-btn {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 1em;
+            font-size: 0.9em;
             text-transform: uppercase;
             background: linear-gradient(45deg, #007bff, var(--accent-blue));
             color: #000;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
-            transform: translateY(-2px);
+            margin-bottom: 15px;
         }
 
         .inbox-section {
-            margin-top: 25px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 15px;
+            padding-top: 12px;
             text-align: left;
         }
 
@@ -130,56 +162,57 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
+        .inbox-title { color: var(--text-main); font-size: 0.9em; }
+        
+        .nav-tabs { display: flex; gap: 10px; font-size: 0.8em; }
+        .nav-tabs span { cursor: pointer; color: var(--text-muted); }
+        .nav-tabs span.active { color: var(--accent-blue); font-weight: bold; }
 
-        .inbox-title {
-            color: var(--text-main);
-            font-size: 1em;
-        }
-
-        .refresh-btn {
-            background: transparent;
-            border: none;
-            color: var(--accent-blue);
-            cursor: pointer;
-            font-size: 0.85em;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .refresh-btn:hover {
-            text-decoration: underline;
-        }
-
-        .email-list {
-            list-style: none;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
+        .email-list { list-style: none; max-height: 160px; overflow-y: auto; }
+        
         .email-item {
             background: rgba(255, 255, 255, 0.03);
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             border-left: 3px solid var(--accent-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        .email-info { font-size: 0.75em; width: 75%; }
+        .email-sender { font-weight: bold; color: var(--text-main); display: block; }
+        .email-subject { color: var(--accent-blue); }
+
+        .mail-actions button {
+            background: none; border: none; cursor: pointer; font-size: 1em; padding: 2px 5px;
+        }
+        .delete-btn { color: var(--danger-red); }
+        .recover-btn { color: var(--success-green); }
 
         .footer {
-            position: fixed;
-            bottom: 10px;
-            right: 20px;
+            margin-top: 15px;
             color: rgba(255, 255, 255, 0.2);
-            font-size: 0.8em;
+            font-size: 0.75em;
+            text-align: center;
         }
         .footer strong { color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
+    <!-- Secret Key Authentication Modal -->
+    <div id="authModal">
+        <div class="auth-box">
+            <h2>🔒 Enter Access Key</h2>
+            <input type="password" id="accessKeyInput" placeholder="Enter Secret Key...">
+            <button class="action-btn" onclick="verifyKey()">Unlock Site</button>
+        </div>
+    </div>
+
+    <div class="main-container" id="mainApp">
         <div class="header">
             <h1>DRACÓ MAIL</h1>
             <p>Powered by DRACÓ GOD</p>
@@ -187,111 +220,166 @@
 
         <div class="email-display-section">
             <div class="email-box">
-                <span id="currentEmail">Creating secure email...</span>
-                <button class="icon-btn" onclick="copyEmail()" title="Copy Email">📋</button>
+                <span id="currentEmail">Generating...</span>
+                <button class="icon-btn" onclick="copyEmail()" title="Copy">📋</button>
             </div>
-            <button class="action-btn" onclick="createAccount()">✨ Generate New Email</button>
+
+            <div class="domain-label">Select Domain:</div>
+            <div class="domain-grid" id="domainGrid">
+                <button class="domain-btn active" onclick="setDomain('dracomail.xyz')">@dracomail.xyz</button>
+                <button class="domain-btn" onclick="setDomain('dracomail.pro')">@dracomail.pro</button>
+                <button class="domain-btn" onclick="setDomain('dracomail.org')">@dracomail.org</button>
+                <button class="domain-btn" onclick="setDomain('dracomail.co')">@dracomail.co</button>
+                <button class="domain-btn" onclick="setDomain('usefulmail.online')">@usefulmail.online</button>
+                <button class="domain-btn" onclick="setDomain('dracohub.com')">@dracohub.com</button>
+            </div>
+
+            <button class="action-btn" onclick="generateNewEmail()">✨ Generate New Email</button>
         </div>
 
         <div class="inbox-section">
             <div class="inbox-header">
-                <h2 class="inbox-title">📥 Inbox</h2>
-                <button class="refresh-btn" onclick="checkInbox()"><span>🔄</span> Refresh</button>
+                <h2 class="inbox-title" id="inboxTitle">📥 Inbox</h2>
+                <div class="nav-tabs">
+                    <span class="active" id="tabInbox" onclick="switchTab('inbox')">Inbox</span>
+                    <span id="tabTrash" onclick="switchTab('trash')">Trash (<span id="trashCount">0</span>)</span>
+                </div>
             </div>
             <ul class="email-list" id="inboxList">
-                <li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">Inbox is empty. Waiting for OTP...</li>
+                <li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">Loading inbox...</li>
             </ul>
         </div>
+
+        <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
     </div>
 
-    <div class="footer">Design & Service by <strong>DRACÓ GOD</strong></div>
-
     <script>
-        let currentEmail = "";
-        let currentPassword = "";
-        let token = "";
+        // --- SECRET KEY CONFIGURATION ---
+        // Yahan apni pasand ki key daal do jo public me kisi ko pata na chale
+        const SECRET_ACCESS_KEY = "dracogod123"; 
 
-        async function createAccount() {
-            document.getElementById('currentEmail').innerText = "Generating...";
-            try {
-                // Get available domain
-                let domainRes = await fetch('https://api.mail.tm/domains');
-                let domainData = await domainRes.json();
-                let domain = domainData['hydra:member'][0].domain;
-
-                let randomString = Math.random().toString(36).substring(2, 10);
-                currentEmail = randomString + "@" + domain;
-                currentPassword = "Password123!";
-
-                // Create account
-                let regRes = await fetch('https://api.mail.tm/accounts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address: currentEmail, password: currentPassword })
-                });
-
-                if (regRes.ok) {
-                    document.getElementById('currentEmail').innerText = currentEmail;
-                    getToken();
-                } else {
-                    document.getElementById('currentEmail').innerText = "Error! Try again.";
-                }
-            } catch (e) {
-                document.getElementById('currentEmail').innerText = "Connection failed!";
+        function verifyKey() {
+            let enteredKey = document.getElementById('accessKeyInput').value;
+            if (enteredKey === SECRET_ACCESS_KEY) {
+                document.getElementById('authModal').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                initMailSystem();
+            } else {
+                alert("❌ Galat Key hai! Access denied.");
             }
         }
 
-        async function getToken() {
-            try {
-                let res = await fetch('https://api.mail.tm/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address: currentEmail, password: currentPassword })
-                });
-                let data = await res.json();
-                token = data.token;
-            } catch (e) {
-                console.error("Token error");
-            }
+        // --- TEMP MAIL LOGIC ---
+        let selectedDomain = "dracomail.xyz";
+        let currentLogin = "";
+        let activeTab = "inbox";
+        let messages = [];
+        let trashBin = [];
+
+        function setDomain(domain) {
+            selectedDomain = domain;
+            document.querySelectorAll('.domain-btn').forEach(btn => {
+                if(btn.innerText.includes(domain)) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            generateNewEmail();
         }
 
-        async function checkInbox() {
-            if (!token) return;
-            try {
-                let res = await fetch('https://api.mail.tm/messages', {
-                    headers: { 'Authorization': 'Bearer ' + token }
-                });
-                let data = await res.json();
-                let messages = data['hydra:member'];
-                let inboxList = document.getElementById('inboxList');
-                inboxList.innerHTML = "";
-
-                if (!messages || messages.length === 0) {
-                    inboxList.innerHTML = '<li class="email-item" style="text-align:center; color:var(--text-muted); border:none;">No messages yet.</li>';
-                    return;
-                }
-
-                messages.forEach(msg => {
-                    let item = document.createElement('li');
-                    item.className = 'email-item';
-                    item.innerHTML = `<strong>From:</strong> ${msg.from.address}<br><strong>Subject:</strong> ${msg.subject}`;
-                    inboxList.appendChild(item);
-                });
-            } catch (e) {
-                console.error("Inbox error");
-            }
+        function generateNewEmail() {
+            let randomName = Math.random().toString(36).substring(2, 10);
+            currentLogin = randomName;
+            let fullEmail = currentLogin + "@" + selectedDomain;
+            document.getElementById('currentEmail').innerText = fullEmail;
+            messages = [];
+            trashBin = [];
+            renderInbox();
         }
-
-        window.onload = function() {
-            createAccount();
-            setInterval(checkInbox, 8000);
-        };
 
         function copyEmail() {
-            if(currentEmail) {
-                navigator.clipboard.writeText(currentEmail);
-                alert('Email copied successfully!');
+            let email = document.getElementById('currentEmail').innerText;
+            navigator.clipboard.writeText(email);
+            alert('Email copied to clipboard!');
+        }
+
+        function checkInbox() {
+            if (!currentLogin) return;
+            let url = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
+            
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if(Array.isArray(data)) {
+                        // Check if new message arrived
+                        let existingIds = [...messages, ...trashBin].map(m => m.id);
+                        data.forEach(msg => {
+                            if(!existingIds.includes(msg.id)) {
+                                messages.push(msg);
+                            }
+                        });
+                        renderInbox();
+                    }
+                }).catch(err => console.log(err));
+        }
+
+        function deleteMessage(id) {
+            let index = messages.findIndex(m => m.id === id);
+            if (index !== -1) {
+                let deleted = messages.splice(index, 1)[0];
+                trashBin.push(deleted);
+                renderInbox();
             }
+        }
+
+        function recoverMessage(id) {
+            let index = trashBin.findIndex(m => m.id === id);
+            if (index !== -1) {
+                let recovered = trashBin.splice(index, 1)[0];
+                messages.push(recovered);
+                renderInbox();
+            }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tabInbox').className = tab === 'inbox' ? 'active' : '';
+            document.getElementById('tabTrash').className = tab === 'trash' ? 'active' : '';
+            document.getElementById('inboxTitle').innerText = tab === 'inbox' ? '📥 Inbox' : '🗑️ Trash Bin';
+            renderInbox();
+        }
+
+        function renderInbox() {
+            let list = document.getElementById('inboxList');
+            let currentList = activeTab === 'inbox' ? messages : trashBin;
+            document.getElementById('trashCount').innerText = trashBin.length;
+            
+            list.innerHTML = "";
+            if (currentList.length === 0) {
+                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty.' : 'Trash is empty.'}</li>`;
+                return;
+            }
+
+            currentList.forEach(msg => {
+                let li = document.createElement('li');
+                li.className = 'email-item';
+                li.innerHTML = `
+                    <div class="email-info">
+                        <span class="email-sender">${msg.from}</span>
+                        <span class="email-subject">${msg.subject}</span>
+                    </div>
+                    <div class="mail-actions">
+                        ${activeTab === 'inbox' ? 
+                            `<button class="delete-btn" onclick="deleteMessage(${msg.id})" title="Delete">🗑️</button>` : 
+                            `<button class="recover-btn" onclick="recoverMessage(${msg.id})" title="Recover">♻️</button>`
+                        }
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function initMailSystem() {
+            generateNewEmail();
+            setInterval(checkInbox, 10000);
         }
     </script>
 </body>
