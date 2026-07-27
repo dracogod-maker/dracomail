@@ -34,7 +34,6 @@
             padding: 10px;
         }
 
-        /* Modals */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -55,11 +54,6 @@
             max-width: 400px;
         }
         .modal-box h2 { color: var(--accent-blue); margin-bottom: 12px; font-size: 1.3em; }
-        .modal-box input, .modal-box select {
-            width: 100%; padding: 10px; background: rgba(0,0,0,0.6);
-            border: 1px solid var(--accent-blue); border-radius: 8px;
-            color: #fff; margin-bottom: 12px; text-align: center; font-size: 0.95em;
-        }
 
         .main-container {
             background: var(--card-bg);
@@ -71,7 +65,6 @@
             max-width: 450px;
             text-align: center;
             box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.6);
-            display: none;
         }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
@@ -96,7 +89,6 @@
             font-weight: bold;
         }
 
-        /* User Status Bar */
         .status-bar {
             background: rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
@@ -132,8 +124,6 @@
         }
 
         .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em; }
-        .icon-btn:hover { color: var(--accent-blue); }
-
         .domain-label { font-size: 0.75em; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: left; }
 
         .domain-grid {
@@ -151,7 +141,6 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.65em;
-            transition: 0.3s;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -161,7 +150,6 @@
             color: #000;
             font-weight: bold;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 8px var(--glow-color);
         }
 
         .action-btn {
@@ -175,7 +163,6 @@
             text-transform: uppercase;
             background: linear-gradient(45deg, #007bff, var(--accent-blue));
             color: #000;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
             margin-bottom: 10px;
         }
 
@@ -198,28 +185,16 @@
             font-weight: bold;
             cursor: pointer;
             color: #000;
-            font-size: 0.9em;
         }
 
-        .inbox-section {
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 10px;
-            text-align: left;
-        }
-
-        .inbox-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
+        .inbox-section { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; text-align: left; }
+        .inbox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
         .inbox-title { color: var(--text-main); font-size: 0.85em; }
         .nav-tabs { display: flex; gap: 8px; font-size: 0.75em; }
         .nav-tabs span { cursor: pointer; color: var(--text-muted); }
         .nav-tabs span.active { color: var(--accent-blue); font-weight: bold; }
 
         .email-list { list-style: none; max-height: 140px; overflow-y: auto; }
-        
         .email-item {
             background: rgba(255, 255, 255, 0.03);
             padding: 6px 8px;
@@ -238,7 +213,6 @@
         .delete-btn { color: var(--danger-red); }
         .recover-btn { color: var(--success-green); }
 
-        /* Admin Dashboard Styles */
         #adminPanel {
             display: none;
             position: fixed;
@@ -262,28 +236,11 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
         th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
         th { color: var(--warning-gold); }
-
-        .footer {
-            margin-top: 10px;
-            color: rgba(255, 255, 255, 0.2);
-            font-size: 0.7em;
-            text-align: center;
-        }
+        .footer { margin-top: 10px; color: rgba(255, 255, 255, 0.2); font-size: 0.7em; text-align: center; }
         .footer strong { color: var(--accent-blue); }
     </style>
 </head>
 <body>
-
-    <!-- Access Key Modal -->
-    <div id="authModal" class="modal-overlay">
-        <div class="modal-box">
-            <h2>🔒 Enter Access Key</h2>
-            <input type="password" id="accessKeyInput" placeholder="Enter Secret Key...">
-            <button class="action-btn" onclick="verifyKey()">Unlock Site</button>
-        </div>
-    </div>
-
-    <!-- Membership Modal -->
     <div id="membershipModal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
             <h2>💎 VIP Membership</h2>
@@ -297,21 +254,14 @@
         </div>
     </div>
 
-    <!-- Admin Panel -->
     <div id="adminPanel">
         <div class="admin-header">
             <h2>👑 ADMIN CONTROL PANEL</h2>
             <button class="close-admin" onclick="toggleAdminPanel(false)">Close Panel</button>
         </div>
         <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Active Users</h3>
-                <p id="adminTotalUsers">0</p>
-            </div>
-            <div class="stat-card">
-                <h3>Total Generated Mails</h3>
-                <p id="adminTotalMails">0</p>
-            </div>
+            <div class="stat-card"><h3>Total Active Users</h3><p id="adminTotalUsers">0</p></div>
+            <div class="stat-card"><h3>Total Generated Mails</h3><p id="adminTotalMails">0</p></div>
         </div>
         <h3 style="margin-bottom:10px; font-size:0.9em; color:var(--accent-blue);">User Management & Points Recharge</h3>
         <div style="margin-bottom:15px; display:flex; gap:10px;">
@@ -321,22 +271,12 @@
         </div>
         <div class="user-table-container">
             <table>
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Points</th>
-                        <th>Last Email</th>
-                        <th>VIP</th>
-                    </tr>
-                </thead>
-                <tbody id="adminUserTableBody">
-                    <!-- Dynamic Rows -->
-                </tbody>
+                <thead><tr><th>User ID</th><th>Points</th><th>Last Email</th><th>VIP</th></tr></thead>
+                <tbody id="adminUserTableBody"></tbody>
             </table>
         </div>
     </div>
 
-    <!-- Main App Container -->
     <div class="main-container" id="mainApp">
         <div class="header">
             <div class="header-left">
@@ -394,9 +334,7 @@
     </div>
 
     <script>
-        const SECRET_ACCESS_KEY = "dracogod123";
         const ADMIN_SECRET = "dracoadmin999";
-
         let userId = localStorage.getItem('draco_user_id');
         if (!userId) {
             userId = 'DRACÓ-' + Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -404,11 +342,7 @@
         }
 
         let userData = JSON.parse(localStorage.getItem('draco_user_data_' + userId)) || {
-            id: userId,
-            points: 10,
-            isVip: false,
-            lastEmail: 'None',
-            totalGenerated: 0
+            id: userId, points: 10, isVip: false, lastEmail: 'None', totalGenerated: 0
         };
         saveUserData();
 
@@ -419,24 +353,10 @@
             localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
         }
 
-        function verifyKey() {
-            let enteredKey = document.getElementById('accessKeyInput').value;
-            if (enteredKey === SECRET_ACCESS_KEY) {
-                document.getElementById('authModal').style.display = 'none';
-                document.getElementById('mainApp').style.display = 'block';
-                initMailSystem();
-            } else {
-                alert("❌ Galat Key hai! Access denied.");
-            }
-        }
-
         function checkAdminAccess() {
             let pass = prompt("Enter Admin Password:");
-            if (pass === ADMIN_SECRET) {
-                toggleAdminPanel(true);
-            } else if (pass !== null) {
-                alert("❌ Incorrect Admin Password!");
-            }
+            if (pass === ADMIN_SECRET) toggleAdminPanel(true);
+            else if (pass !== null) alert("❌ Incorrect Admin Password!");
         }
 
         function toggleAdminPanel(show) {
@@ -449,20 +369,16 @@
             let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
             let usersArray = Object.values(globalUsers);
             document.getElementById('adminTotalUsers').innerText = usersArray.length;
-            
-            let totalMails = usersArray.reduce((acc, u) => acc + u.totalGenerated, 0);
-            document.getElementById('adminTotalMails').innerText = totalMails;
+            document.getElementById('adminTotalMails').innerText = usersArray.reduce((acc, u) => acc + u.totalGenerated, 0);
 
             let tbody = document.getElementById('adminUserTableBody');
             tbody.innerHTML = "";
             usersArray.forEach(u => {
                 let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
+                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
                     <td style="color:var(--warning-gold); font-weight:bold;">${u.points}</td>
                     <td style="font-size:0.65em;">${u.lastEmail}</td>
-                    <td>${u.isVip ? '👑 VIP' : 'Standard'}</td>
-                `;
+                    <td>${u.isVip ? '👑 VIP' : 'Standard'}</td>`;
                 tbody.appendChild(tr);
             });
         }
@@ -477,4 +393,127 @@
                 if(globalUsers[targetId].points > 50) globalUsers[targetId].isVip = true;
                 localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
                 alert("✅ Successfully added " + pts + " points to " + targetId);
-                loadAdminData()
+                loadAdminData();
+                if(targetId === userId) { userData = globalUsers[userId]; updateUIStatus(); }
+            } else { alert("❌ User ID not found in database!"); }
+        }
+
+        let selectedDomain = "1secmail.com";
+        let currentLogin = "";
+        let activeTab = "inbox";
+        let messages = [];
+        let trashBin = [];
+
+        function setDomain(domain) {
+            selectedDomain = domain;
+            document.querySelectorAll('.domain-btn').forEach(btn => {
+                if(btn.innerText === domain) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            generateNewEmail();
+        }
+
+        function generateNewEmail() {
+            if (!userData.isVip && userData.points <= 0) {
+                alert("❌ Aapke points khatam ho gaye hain!");
+                openMembershipModal();
+                return;
+            }
+            if (!userData.isVip) userData.points -= 1;
+            userData.totalGenerated += 1;
+
+            currentLogin = Math.random().toString(36).substring(2, 10);
+            userData.lastEmail = currentLogin + "@" + selectedDomain;
+            saveUserData();
+            updateUIStatus();
+
+            document.getElementById('currentEmail').innerText = userData.lastEmail;
+            messages = [];
+            trashBin = [];
+            renderInbox();
+        }
+
+        function updateUIStatus() {
+            document.getElementById('userPoints').innerText = userData.points;
+            document.getElementById('userVipStatus').innerText = userData.isVip ? 'VIP UNLIMITED' : 'Standard';
+            document.getElementById('myUserIdDisplay').innerText = userData.id;
+        }
+
+        function copyEmail() {
+            navigator.clipboard.writeText(document.getElementById('currentEmail').innerText);
+            alert('Email copied to clipboard!');
+        }
+
+        function copyUserId() {
+            navigator.clipboard.writeText(userId);
+            alert('User ID copied! Send this to Admin.');
+        }
+
+        function openMembershipModal() {
+            updateUIStatus();
+            document.getElementById('membershipModal').style.display = 'flex';
+        }
+
+        function closeMembershipModal() {
+            document.getElementById('membershipModal').style.display = 'none';
+        }
+
+        function checkInbox() {
+            if (!currentLogin) return;
+            fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(Array.isArray(data)) {
+                        let existingIds = [...messages, ...trashBin].map(m => m.id);
+                        data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
+                        renderInbox();
+                    }
+                }).catch(err => console.log(err));
+        }
+
+        function deleteMessage(id) {
+            let index = messages.findIndex(m => m.id === id);
+            if (index !== -1) { trashBin.push(messages.splice(index, 1)[0]); renderInbox(); }
+        }
+
+        function recoverMessage(id) {
+            let index = trashBin.findIndex(m => m.id === id);
+            if (index !== -1) { messages.push(trashBin.splice(index, 1)[0]); renderInbox(); }
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tabInbox').className = tab === 'inbox' ? 'active' : '';
+            document.getElementById('tabTrash').className = tab === 'trash' ? 'active' : '';
+            document.getElementById('inboxTitle').innerText = tab === 'inbox' ? '📥 Inbox' : '🗑️ Trash Bin';
+            renderInbox();
+        }
+
+        function renderInbox() {
+            let list = document.getElementById('inboxList');
+            let currentList = activeTab === 'inbox' ? messages : trashBin;
+            document.getElementById('trashCount').innerText = trashBin.length;
+            
+            list.innerHTML = "";
+            if (currentList.length === 0) {
+                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">${activeTab === 'inbox' ? 'Inbox is empty.' : 'Trash is empty.'}</li>`;
+                return;
+            }
+
+            currentList.forEach(msg => {
+                let li = document.createElement('li');
+                li.className = 'email-item';
+                li.innerHTML = `<div class="email-info"><span class="email-sender">${msg.from}</span><span class="email-subject">${msg.subject}</span></div>
+                    <div class="mail-actions">${activeTab === 'inbox' ? `<button class="delete-btn" onclick="deleteMessage(${msg.id})" title="Delete">🗑️</button>` : `<button class="recover-btn" onclick="recoverMessage(${msg.id})" title="Recover">♻️</button>`}</div>`;
+                list.appendChild(li);
+            });
+        }
+
+        window.onload = function() {
+            updateUIStatus();
+            generateNewEmail();
+            setInterval(checkInbox, 10000);
+        };
+    </script>
+</body>
+</html>
