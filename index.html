@@ -511,26 +511,33 @@
             btnText.innerText = "Checking...";
 
             let targetUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
-            let proxyUrl = `https://api.allorigins.win/get?url=` + encodeURIComponent(targetUrl);
 
-            fetch(proxyUrl)
+            fetch(targetUrl, { mode: 'cors' })
                 .then(res => res.json())
-                .then(response => {
+                .then(data => {
                     btnText.innerText = "Refresh Inbox";
-                    try {
-                        let data = JSON.parse(response.contents);
-                        if(Array.isArray(data)) {
-                            let existingIds = [...messages, ...trashBin].map(m => m.id);
-                            data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
-                            renderInbox();
-                        }
-                    } catch(e) {
-                        console.log("Parse error", e);
+                    if(Array.isArray(data)) {
+                        let existingIds = [...messages, ...trashBin].map(m => m.id);
+                        data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
+                        renderInbox();
                     }
                 })
                 .catch(err => {
-                    btnText.innerText = "Refresh Inbox";
-                    console.log("Fetch error", err);
+                    let fallbackUrl = `https://corsproxy.io/?` + encodeURIComponent(targetUrl);
+                    fetch(fallbackUrl)
+                        .then(res => res.json())
+                        .then(data => {
+                            btnText.innerText = "Refresh Inbox";
+                            if(Array.isArray(data)) {
+                                let existingIds = [...messages, ...trashBin].map(m => m.id);
+                                data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
+                                renderInbox();
+                            }
+                        })
+                        .catch(e => {
+                            btnText.innerText = "Refresh Inbox";
+                            console.log("All fetch methods failed", e);
+                        });
                 });
         }
 
