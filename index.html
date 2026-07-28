@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CC Validator Hub</title>
+    <title>CC Validator Hub - Pro Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -32,13 +32,13 @@
                 <i class="fa-solid fa-shield-halved text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-white">Validator Hub</h1>
-                <p class="text-xs text-slate-400">Secure Client-Side Luhn Check</p>
+                <h1 class="text-xl font-bold tracking-tight text-white">Validator Hub Pro</h1>
+                <p class="text-xs text-slate-400">Advanced BIN & Luhn Verification</p>
             </div>
         </div>
         <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>System Active</span>
+            <span>Engine Active</span>
         </div>
     </header>
 
@@ -51,7 +51,7 @@
                 <label for="ccInput" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
                     <i class="fa-regular fa-credit-card text-indigo-400"></i> Enter Card Details (Bulk Supported)
                 </label>
-                <span class="text-xs text-slate-500">Format: 0000|00|00|000</span>
+                <span class="text-xs text-slate-500">Format: 000000|00|00|000</span>
             </div>
             
             <textarea id="ccInput" rows="10" placeholder="411111|12|28|123&#10;522222|06|27|456" 
@@ -59,7 +59,7 @@
             
             <div class="mt-4 flex items-center justify-between gap-4">
                 <div class="text-xs text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> Fast Processing Engine
+                    <i class="fa-solid fa-bolt text-amber-400"></i> Strict Filter Engine
                 </div>
                 <div class="flex gap-2">
                     <button onclick="clearAll()" class="px-4 py-2.5 rounded-xl border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/50 text-xs font-semibold transition-all">
@@ -109,13 +109,14 @@
 
     <!-- Footer -->
     <footer class="max-w-5xl mx-auto w-full mt-8 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
-        Built for structural syntax and Luhn algorithm verification only.
+        Advanced client-side format & structural checks.
     </footer>
 
     <!-- Script Logic -->
     <script>
         function luhnCheck(numStr) {
             let arr = (numStr + '').replace(/\D/g, '').split('').reverse().map(x => parseInt(x, 10));
+            if (arr.length < 13 || arr.length > 19) return false; // Strict length check
             let sum = arr.reduce((acc, val, i) => {
                 let num = val;
                 if (i % 2 !== 0) {
@@ -124,7 +125,41 @@
                 }
                 return acc + num;
             }, 0);
-            return (sum % 10 === 0) && (arr.length > 0);
+            return (sum % 10 === 0);
+        }
+
+        function validateCard(fullLine) {
+            let parts = fullLine.split(/[:|,\s]+/);
+            if (parts.length < 4) return { valid: false, reason: "Bad Format" };
+
+            let cc = parts[0].replace(/\D/g, '');
+            let month = parseInt(parts[1], 10);
+            let year = parseInt(parts[2], 10);
+            let cvv = parts[3].replace(/\D/g, '');
+
+            // 1. Card Length Check
+            if (cc.length < 13 || cc.length > 19) return { valid: false, reason: "Invalid Length" };
+
+            // 2. Luhn Check
+            if (!luhnCheck(cc)) return { valid: false, reason: "Luhn Failed" };
+
+            // 3. Month & Year Expiry Check
+            if (isNaN(month) || month < 1 || month > 12) return { valid: false, reason: "Invalid Month" };
+            if (isNaN(year)) return { valid: false, reason: "Invalid Year" };
+            
+            // Adjust 2-digit year to 4-digit (e.g. 26 -> 2026)
+            if (year < 100) year += 2000;
+            
+            let currentYear = new Date().getFullYear();
+            let currentMonth = new Date().getMonth() + 1;
+            if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                return { valid: false, reason: "Expired Card" };
+            }
+
+            // 4. CVV Check
+            if (cvv.length < 3 || cvv.length > 4) return { valid: false, reason: "Invalid CVV" };
+
+            return { valid: true, reason: "LIVE / VALID" };
         }
 
         function clearAll() {
@@ -145,7 +180,7 @@
             }
 
             const lines = rawData.split('\n');
-            let total = lines.length;
+            let total = 0;
             let validCount = 0;
             let invalidCount = 0;
             
@@ -153,27 +188,21 @@
 
             lines.forEach((line) => {
                 let cleanLine = line.trim();
-                if (!cleanLine) {
-                    total--;
-                    return;
-                }
+                if (!cleanLine) return;
+                total++;
 
-                // Extracting card number part (splitting by | or space or colon)
-                let parts = cleanLine.split(/[:|,\s]+/);
-                let cardNumber = parts[0];
-
-                let isValid = luhnCheck(cardNumber);
+                let checkResult = validateCard(cleanLine);
                 let itemDiv = document.createElement('div');
                 itemDiv.className = "p-2 rounded-lg flex items-center justify-between border transition-all";
 
-                if (isValid) {
+                if (checkResult.valid) {
                     validCount++;
                     itemDiv.classList.add('bg-emerald-950/20', 'border-emerald-500/20', 'text-emerald-300');
-                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">VALID</span>`;
+                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">${checkResult.reason}</span>`;
                 } else {
                     invalidCount++;
                     itemDiv.classList.add('bg-rose-950/20', 'border-rose-500/20', 'text-rose-300');
-                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded text-rose-300">INVALID</span>`;
+                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded text-rose-300">${checkResult.reason}</span>`;
                 }
                 logBox.appendChild(itemDiv);
             });
@@ -184,7 +213,7 @@
         }
 
         function copyResults() {
-            let validElements = document.querySelectorAll('.text-emerald-350, .border-emerald-500\\/20');
+            let validElements = document.querySelectorAll('.bg-emerald-950\\/20');
             let textToCopy = '';
             validElements.forEach(el => {
                 let text = el.querySelector('span').innerText.replace(/^.*?\s/, '');
