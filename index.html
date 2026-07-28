@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reward Hub - Free Redeem Codes</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Reward Hub & Secure Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
@@ -38,12 +36,17 @@
             </div>
             <div>
                 <h1 class="text-xl font-extrabold tracking-tight text-white">REWARD <span class="text-indigo-400">HUB</span></h1>
-                <p class="text-xs text-slate-400">Daily Verified Redeem Codes</p>
+                <p class="text-xs text-slate-400">Dynamic Verified Codes</p>
             </div>
         </div>
-        <div class="flex items-center space-x-2 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Server Online</span>
+        <div class="flex items-center space-x-3">
+            <button onclick="requestAdminAccess()" class="bg-indigo-600/20 hover:bg-indigo-600/40 border border-indigo-500/30 text-indigo-300 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shadow-md">
+                <i class="fa-solid fa-lock"></i> Admin Panel
+            </button>
+            <div class="hidden sm:flex items-center space-x-2 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Online</span>
+            </div>
         </div>
     </header>
 
@@ -56,25 +59,25 @@
             <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
             
             <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">
-                <i class="fa-solid fa-fire mr-1 text-amber-400"></i> Season 2026 Updated
+                <i class="fa-solid fa-fire mr-1 text-amber-400"></i> Instant Live Updates
             </span>
             <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 mb-2">Claim Your Free Rewards</h2>
             <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto mb-6">
-                Select your favorite platform below to generate and unlock verified gift cards and game codes instantly.
+                Browse through the latest updated gift cards and game vouchers below.
             </p>
 
             <!-- Category Selector Buttons -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
-                <button onclick="filterCodes('all')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2">
+                <button onclick="filterCodes('all', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2">
                     <i class="fa-solid fa-border-all"></i> All Codes
                 </button>
-                <button onclick="filterCodes('google')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                <button onclick="filterCodes('google', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-google-play text-emerald-400"></i> Play Store
                 </button>
-                <button onclick="filterCodes('freefire')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                <button onclick="filterCodes('freefire', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-gamepad text-amber-400"></i> Free Fire
                 </button>
-                <button onclick="filterCodes('amazon')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                <button onclick="filterCodes('amazon', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
                     <i class="fa-brands fa-amazon text-orange-400"></i> Amazon
                 </button>
             </div>
@@ -82,93 +85,175 @@
 
         <!-- Codes Display Section -->
         <div class="space-y-3" id="codesContainer">
-            
-            <!-- Code Item 1 -->
-            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="google">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
-                        <i class="fa-brands fa-google-play"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-white">Google Play Gift Card</h3>
-                            <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹500 / $10</span>
-                        </div>
-                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">GPL-8921-XXXX-4921</p>
-                    </div>
-                </div>
-                <button onclick="claimCode(this, 'GPL-8921-XXXX-4921')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
-                    <i class="fa-regular fa-copy"></i> Copy Code
-                </button>
-            </div>
-
-            <!-- Code Item 2 -->
-            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="freefire">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg flex-shrink-0">
-                        <i class="fa-solid fa-fire"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-white">Free Fire Diamond Voucher</h3>
-                            <span class="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded font-semibold">500 Diamonds</span>
-                        </div>
-                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">FF26-XYZ9-PL78-M9Q2</p>
-                    </div>
-                </div>
-                <button onclick="claimCode(this, 'FF26-XYZ9-PL78-M9Q2')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
-                    <i class="fa-regular fa-copy"></i> Copy Code
-                </button>
-            </div>
-
-            <!-- Code Item 3 -->
-            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="amazon">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-lg flex-shrink-0">
-                        <i class="fa-brands fa-amazon"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-white">Amazon Pay E-Gift Code</h3>
-                            <span class="bg-orange-500/10 text-orange-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹250 Value</span>
-                        </div>
-                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">AMZN-7721-BR90-1123</p>
-                    </div>
-                </div>
-                <button onclick="claimCode(this, 'AMZN-7721-BR90-1123')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
-                    <i class="fa-regular fa-copy"></i> Copy Code
-                </button>
-            </div>
-
-            <!-- Code Item 4 -->
-            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="google">
-                <div class="flex items-center space-x-3">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
-                        <i class="fa-brands fa-google-play"></i>
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="text-sm font-bold text-white">Google Play Gift Card</h3>
-                            <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹1000 / $20</span>
-                        </div>
-                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">GPL-3342-9012-BB71</p>
-                    </div>
-                </div>
-                <button onclick="claimCode(this, 'GPL-3342-9012-BB71')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
-                    <i class="fa-regular fa-copy"></i> Copy Code
-                </button>
-            </div>
-
+            <!-- Dynamic Codes will load here -->
         </div>
     </main>
 
+    <!-- SECURE ADMIN MODAL -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-indigo-500/20 shadow-2xl relative">
+            <button onclick="toggleAdminModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-sm">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="bg-indigo-600/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-400">
+                    <i class="fa-solid fa-shield-halved text-lg"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Secure Admin Dashboard</h3>
+                    <p class="text-xs text-slate-400">Protected Area - Add Unlimited Codes</p>
+                </div>
+            </div>
+
+            <form id="addCodeForm" onsubmit="addNewCode(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Select Category</label>
+                    <select id="codeCategory" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                        <option value="google">Google Play Store</option>
+                        <option value="freefire">Free Fire Voucher</option>
+                        <option value="amazon">Amazon Gift Card</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Reward Title & Value</label>
+                    <input type="text" id="codeTitle" required placeholder="e.g. ₹500 Google Play" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Redeem Code String</label>
+                    <input type="text" id="codeString" required placeholder="e.g. GPL-9921-XXXX-8812" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs font-mono text-indigo-300 focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="submit" class="flex-grow py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-600/30">
+                        <i class="fa-solid fa-plus mr-1"></i> Add Code to Website
+                    </button>
+                    <button type="button" onclick="clearAllCodes()" class="px-4 py-3 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 hover:bg-rose-900/40 text-xs font-bold transition-all">
+                        Reset All
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="max-w-4xl mx-auto w-full mt-10 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
-        &copy; 2026 Reward Hub. Codes update daily at midnight.
+        &copy; 2026 Reward Hub. Protected Security Enabled.
     </footer>
 
-    <!-- JavaScript Script -->
+    <!-- JavaScript Logic -->
     <script>
+        // Yahan aap apna password change kar sakte hain (default: admin123)
+        const ADMIN_PASS = "admin123";
+
+        let defaultCodes = [
+            { category: 'google', title: 'Google Play Gift Card (₹500)', code: 'GPL-8921-XXXX-4921' },
+            { category: 'freefire', title: 'Free Fire Diamond Voucher', code: 'FF26-XYZ9-PL78-M9Q2' },
+            { category: 'amazon', title: 'Amazon Pay E-Gift Code', code: 'AMZN-7721-BR90-1123' }
+        ];
+
+        let currentFilter = 'all';
+
+        function getCodes() {
+            let stored = localStorage.getItem('my_reward_codes');
+            if (!stored) {
+                localStorage.setItem('my_reward_codes', JSON.stringify(defaultCodes));
+                return defaultCodes;
+            }
+            return JSON.parse(stored);
+        }
+
+        function renderCodes(filter = 'all') {
+            const container = document.getElementById('codesContainer');
+            let codes = getCodes();
+            container.innerHTML = '';
+
+            let filtered = codes.filter(item => filter === 'all' || item.category === filter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-slate-500 text-xs italic">No codes available in this category.</div>';
+                return;
+            }
+
+            filtered.forEach((item) => {
+                let icon = 'fa-brands fa-google-play text-emerald-400';
+                let bgClass = 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
+                if (item.category === 'freefire') {
+                    icon = 'fa-solid fa-fire text-amber-400';
+                    bgClass = 'bg-amber-500/10 border-amber-500/20 text-amber-400';
+                } else if (item.category === 'amazon') {
+                    icon = 'fa-brands fa-amazon text-orange-400';
+                    bgClass = 'bg-orange-500/10 border-orange-500/20 text-orange-400';
+                }
+
+                let cardHTML = `
+                    <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="${item.category}">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 rounded-xl ${bgClass} border flex items-center justify-center text-lg flex-shrink-0">
+                                <i class="${icon}"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-sm font-bold text-white">${item.title}</h3>
+                                    <span class="bg-indigo-500/10 text-indigo-300 text-[10px] px-2 py-0.5 rounded font-semibold">Active</span>
+                                </div>
+                                <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">${item.code}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button onclick="claimCode(this, '${item.code}')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
+                                <i class="fa-regular fa-copy"></i> Copy Code
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // Password Prompt Security Check
+        function requestAdminAccess() {
+            let password = prompt("Enter Admin Password to Access Panel:");
+            if (password === null) return; // Cancelled
+
+            if (password === ADMIN_PASS) {
+                toggleAdminModal();
+            } else {
+                alert("Incorrect Password! Access Denied.");
+            }
+        }
+
+        function toggleAdminModal() {
+            let modal = document.getElementById('adminModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function addNewCode(event) {
+            event.preventDefault();
+            let category = document.getElementById('codeCategory').value;
+            let title = document.getElementById('codeTitle').value;
+            let code = document.getElementById('codeString').value;
+
+            let codes = getCodes();
+            codes.unshift({ category, title, code });
+            localStorage.setItem('my_reward_codes', JSON.stringify(codes));
+
+            document.getElementById('addCodeForm').reset();
+            toggleAdminModal();
+            renderCodes(currentFilter);
+            alert('New code added successfully!');
+        }
+
+        function clearAllCodes() {
+            if (confirm('Are you sure you want to reset all codes?')) {
+                localStorage.removeItem('my_reward_codes');
+                renderCodes(currentFilter);
+                toggleAdminModal();
+            }
+        }
+
         function claimCode(button, codeText) {
             navigator.clipboard.writeText(codeText);
             let originalHTML = button.innerHTML;
@@ -181,26 +266,25 @@
             }, 2000);
         }
 
-        function filterCodes(category) {
-            // Update button active states
+        function filterCodes(category, btnElement) {
+            currentFilter = category;
             const buttons = document.querySelectorAll('.cat-btn');
             buttons.forEach(btn => {
-                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
+                btn.classList.0 && btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
                 btn.classList.add('bg-slate-900/80', 'text-slate-300', 'border', 'border-slate-800');
             });
-            event.currentTarget.classList.remove('bg-slate-900/80', 'text-slate-300', 'border', 'border-slate-800');
-            event.currentTarget.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
-
-            // Filter cards
-            const cards = document.querySelectorAll('.code-card');
-            cards.forEach(card => {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
+            // Safer toggle for buttons
+            buttons.forEach(b => {
+                b.className = "cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2";
             });
+            btnElement.className = "cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2";
+
+            renderCodes(category);
         }
+
+        window.onload = function() {
+            renderCodes('all');
+        };
     </script>
 </body>
 </html>
