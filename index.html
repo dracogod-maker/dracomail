@@ -1,598 +1,203 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DRACÓ MAIL PRO :: Ultimate OTP Gateway</title>
+    <title>CC Validator Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg-color: #05070a;
-            --card-bg: rgba(10, 20, 30, 0.9);
-            --accent-blue: #00f2ff;
-            --glow-color: rgba(0, 242, 255, 0.3);
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --danger-red: #ff4757;
-            --success-green: #2ed573;
-            --warning-gold: #ffa502;
-            --telegram-blue: #229ed9;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 10px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
         }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.95);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-
-        /* Big Mail Reader Modal */
-        .mail-reader-modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.95);
-            z-index: 10001;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
         }
-        .mail-reader-content {
-            background: #0b131a;
-            border: 2px solid var(--success-green);
-            border-radius: 15px;
-            width: 100%;
-            max-width: 550px;
-            max-height: 85vh;
-            padding: 20px;
-            box-shadow: 0 0 40px rgba(46, 213, 115, 0.3);
-            overflow-y: auto;
-            text-align: left;
-        }
-
-        .main-container {
-            background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 18px;
-            width: 100%;
-            max-width: 480px;
-            text-align: center;
-            box-shadow: 0 0 40px var(--glow-color), 0 10px 30px rgba(0, 0, 0, 0.6);
-        }
-
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .header-left h1 {
-            font-size: 1.4em;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-blue);
-            text-shadow: 0 0 10px var(--accent-blue);
-            text-align: left;
-        }
-        .header-left p { color: var(--text-muted); font-size: 0.65em; text-align: left; }
-        
-        .header-btns { display: flex; gap: 5px; }
-        .admin-trigger-btn {
-            background: rgba(255, 165, 2, 0.2);
-            border: 1px solid var(--warning-gold);
-            color: var(--warning-gold);
-            padding: 5px 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.7em;
-            font-weight: bold;
-        }
-        .help-btn {
-            background: rgba(34, 158, 217, 0.2);
-            border: 1px solid var(--telegram-blue);
-            color: var(--telegram-blue);
-            padding: 5px 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.7em;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .status-bar {
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 0.85em;
-        }
-        .points-badge { color: var(--warning-gold); font-weight: bold; }
-        .vip-badge { color: var(--success-green); font-weight: bold; text-transform: uppercase; }
-
-        .email-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 2px solid var(--accent-blue);
-            border-radius: 10px;
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            box-shadow: inset 0 0 10px var(--glow-color);
-        }
-
-        #currentEmail {
-            color: var(--accent-blue);
-            font-size: 0.8em;
-            font-weight: bold;
-            word-break: break-all;
-            text-align: left;
-        }
-
-        .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.2em; }
-        .domain-label { font-size: 0.75em; color: var(--warning-gold); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; text-align: left; font-weight: bold; }
-
-        /* Domains List with Tags Layout */
-        .domain-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-bottom: 12px;
-            max-height: 180px;
-            overflow-y: auto;
-            padding-right: 2px;
-            text-align: left;
-        }
-
-        .domain-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.2s;
-        }
-        .domain-card:hover { background: rgba(255, 255, 255, 0.08); }
-        .domain-card.active {
-            background: rgba(0, 242, 255, 0.15);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 8px var(--glow-color);
-        }
-
-        .domain-name { font-size: 0.75em; font-weight: bold; color: var(--text-main); }
-        .domain-tag { font-size: 0.6em; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
-        
-        /* Tag Colors */
-        .tag-game { background: rgba(255, 71, 87, 0.2); color: var(--danger-red); border: 1px solid var(--danger-red); }
-        .tag-insta { background: rgba(255, 105, 180, 0.2); color: #ff69b4; border: 1px solid #ff69b4; }
-        .tag-fb { background: rgba(34, 158, 217, 0.2); color: var(--telegram-blue); border: 1px solid var(--telegram-blue); }
-        .tag-app { background: rgba(46, 213, 115, 0.2); color: var(--success-green); border: 1px solid var(--success-green); }
-
-        .action-btn {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8em;
-            text-transform: uppercase;
-            background: linear-gradient(45deg, #007bff, var(--accent-blue));
-            color: #000;
-            margin-bottom: 10px;
-        }
-
-        .inbox-section { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; text-align: left; }
-        .inbox-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-        .inbox-title { color: var(--text-main); font-size: 0.85em; }
-        
-        .inbox-actions-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .refresh-btn {
-            background: rgba(0, 242, 255, 0.15);
-            border: 1px solid var(--accent-blue);
-            color: var(--accent-blue);
-            padding: 5px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.75em;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .email-list { list-style: none; max-height: 130px; overflow-y: auto; }
-        .email-item {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 7px 10px;
-            border-radius: 6px;
-            margin-bottom: 5px;
-            border-left: 3px solid var(--success-green);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .email-item:hover { background: rgba(255,255,255,0.08); }
-        .email-info { font-size: 0.7em; width: 85%; }
-        .email-sender { font-weight: bold; color: var(--success-green); display: block; }
-        .email-subject { color: var(--accent-blue); }
-
-        /* Admin Panel */
-        #adminPanel {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.98);
-            z-index: 10002;
-            padding: 20px;
-            overflow-y: auto;
-            text-align: left;
-        }
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .admin-header h2 { color: var(--warning-gold); }
-        .close-admin { background: var(--danger-red); color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        
-        .user-table-container { background: rgba(0,0,0,0.5); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); padding: 10px; max-height: 350px; overflow-y: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.7em; }
-        th, td { padding: 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { color: var(--warning-gold); }
-        .footer { margin-top: 10px; color: rgba(255, 255, 255, 0.2); font-size: 0.65em; text-align: center; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8">
 
-    <!-- Big Mail / OTP Viewer Modal -->
-    <div id="mailReaderModal" class="mail-reader-modal">
-        <div class="mail-reader-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
-                <h3 style="color: var(--success-green); font-size: 1.1em;">📩 OTP / Mail Details</h3>
-                <button onclick="closeMailReader()" style="background:var(--danger-red); color:#fff; border:none; padding:4px 10px; border-radius:5px; cursor:pointer; font-weight:bold;">X</button>
+    <!-- Header -->
+    <header class="max-w-5xl mx-auto w-full mb-8 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <div class="bg-indigo-600/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-400">
+                <i class="fa-solid fa-shield-halved text-xl"></i>
             </div>
-            <div style="margin-bottom: 10px; font-size: 0.8em;"><strong>From:</strong> <span id="readerSender" style="color:var(--warning-gold);">---</span></div>
-            <div style="margin-bottom: 10px; font-size: 0.8em;"><strong>Subject:</strong> <span id="readerSubject" style="color:var(--accent-blue);">---</span></div>
-            <div style="background: rgba(0,0,0,0.5); padding: 12px; border-radius: 8px; border: 1px solid var(--accent-blue); margin-bottom: 15px;">
-                <strong style="font-size: 0.75em; color: var(--text-muted); display: block; margin-bottom: 5px;">Message / OTP Content:</strong>
-                <div id="readerBody" style="font-size: 0.9em; word-break: break-all; color: #fff; line-height: 1.4;">Loading message body...</div>
-            </div>
-            <button class="action-btn" onclick="closeMailReader()">Close Window</button>
-        </div>
-    </div>
-
-    <!-- Admin Panel -->
-    <div id="adminPanel">
-        <div class="admin-header">
-            <h2>👑 LIVE USER TRACKING PANEL</h2>
-            <button class="close-admin" onclick="toggleAdminPanel(false)">Close Panel</button>
-        </div>
-        <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--accent-blue);">Real-Time User Actions & Where They Are Logging In</h3>
-        <div class="user-table-container">
-            <table>
-                <thead><tr><th>User ID / Name</th><th>Points</th><th>Current Active Mail</th><th>Last Action / Activity</th></tr></thead>
-                <tbody id="adminUserTableBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Main App Container -->
-    <div class="main-container" id="mainApp">
-        <div class="header">
-            <div class="header-left">
-                <h1>DRACÓ MAIL</h1>
-                <p>All Apps & Games OTP Gateway</p>
-            </div>
-            <div class="header-btns">
-                <a href="https://t.me/DRACO_GOD" target="_blank" class="help-btn" title="Support">💬 Help</a>
-                <button class="admin-trigger-btn" onclick="checkAdminAccess()">👑 Admin</button>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white">Validator Hub</h1>
+                <p class="text-xs text-slate-400">Secure Client-Side Luhn Check</p>
             </div>
         </div>
-
-        <div class="status-bar">
-            <span>Points: <span class="points-badge" id="userPoints">10</span></span>
-            <span>Status: <span class="vip-badge" id="userVipStatus">Active</span></span>
+        <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>System Active</span>
         </div>
+    </header>
 
-        <div class="email-display-section">
-            <div class="email-box">
-                <span id="currentEmail">Generating fast letters...</span>
-                <button class="icon-btn" onclick="copyEmail()" title="Copy">📋</button>
-            </div>
-
-            <div class="domain-label">Select Domain & Best Usage:</div>
-            <div class="domain-grid" id="domainGrid">
-                <div class="domain-card active" onclick="setDomain('dracoggod.com', this)">
-                    <span class="domain-name">dracoggod.com</span>
-                    <span class="domain-tag tag-game">🎮 Best for Games / FF</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('gamermail.xyz', this)">
-                    <span class="domain-name">gamermail.xyz</span>
-                    <span class="domain-tag tag-game">🎮 Best for Free Fire / BGMI</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('otpinstant.net', this)">
-                    <span class="domain-name">otpinstant.net</span>
-                    <span class="domain-tag tag-insta">📸 Best for Instagram</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('1secmail.com', this)">
-                    <span class="domain-name">1secmail.com</span>
-                    <span class="domain-tag tag-fb">📘 Best for Facebook</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('1secmail.org', this)">
-                    <span class="domain-name">1secmail.org</span>
-                    <span class="domain-tag tag-app">⚡ Best for General Apps</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('1secmail.net', this)">
-                    <span class="domain-name">1secmail.net</span>
-                    <span class="domain-tag tag-app">⚡ Best for Other Apps</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('esixt.com', this)">
-                    <span class="domain-name">esixt.com</span>
-                    <span class="domain-tag tag-insta">📸 Best for Insta / Social</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('wwjmp.com', this)">
-                    <span class="domain-name">wwjmp.com</span>
-                    <span class="domain-tag tag-fb">📘 Best for Meta / FB</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('vintomaper.com', this)">
-                    <span class="domain-name">vintomaper.com</span>
-                    <span class="domain-tag tag-game">🎮 Best for Gaming</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('kepur.net', this)">
-                    <span class="domain-name">kepur.net</span>
-                    <span class="domain-tag tag-app">🚀 Fast OTP Delivery</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('moakt.cc', this)">
-                    <span class="domain-name">moakt.cc</span>
-                    <span class="domain-tag tag-app">🌐 Universal Working</span>
-                </div>
-                <div class="domain-card" onclick="setDomain('fastmail.fun', this)">
-                    <span class="domain-name">fastmail.fun</span>
-                    <span class="domain-tag tag-app">✨ Instant Verification</span>
-                </div>
-            </div>
-
-            <button class="action-btn" onclick="generateNewEmail()">✨ Generate Letter-Only Mail</button>
-        </div>
-
-        <div class="inbox-section">
-            <div class="inbox-header">
-                <h2 class="inbox-title">📥 Instant OTP Inbox</h2>
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+        
+        <!-- Input Panel -->
+        <section class="lg:col-span-7 glass-panel rounded-2xl p-6 shadow-xl neon-glow flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <label for="ccInput" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+                    <i class="fa-regular fa-credit-card text-indigo-400"></i> Enter Card Details (Bulk Supported)
+                </label>
+                <span class="text-xs text-slate-500">Format: 0000|00|00|000</span>
             </div>
             
-            <div class="inbox-actions-bar">
-                <button class="refresh-btn" onclick="checkInbox()">🔄 <span id="refreshText">Check OTP Now</span></button>
-                <span style="font-size:0.65em; color:var(--text-muted);">Auto-fetching active...</span>
+            <textarea id="ccInput" rows="10" placeholder="411111|12|28|123&#10;522222|06|27|456" 
+                class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none font-mono transition-all"></textarea>
+            
+            <div class="mt-4 flex items-center justify-between gap-4">
+                <div class="text-xs text-slate-400 flex items-center gap-1.5">
+                    <i class="fa-solid fa-bolt text-amber-400"></i> Fast Processing Engine
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="clearAll()" class="px-4 py-2.5 rounded-xl border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/50 text-xs font-semibold transition-all">
+                        Clear
+                    </button>
+                    <button onclick="startCheck()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Start Check
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats & Results Summary Panel -->
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-indigo-500 text-center">
+                    <span class="block text-xs text-slate-400 font-medium mb-1">Total</span>
+                    <span id="statTotal" class="text-lg font-bold text-white">0</span>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-500 text-center">
+                    <span class="block text-xs text-slate-400 font-medium mb-1">Valid</span>
+                    <span id="statValid" class="text-lg font-bold text-emerald-400">0</span>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-rose-500 text-center">
+                    <span class="block text-xs text-slate-400 font-medium mb-1">Invalid</span>
+                    <span id="statInvalid" class="text-lg font-bold text-rose-400">0</span>
+                </div>
             </div>
 
-            <ul class="email-list" id="inboxList">
-                <li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">Inbox ready for OTP...</li>
-            </ul>
-        </div>
+            <!-- Live Output Screen -->
+            <div class="glass-panel rounded-2xl p-5 flex-grow flex flex-col shadow-xl min-h-[260px]">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-terminal text-indigo-400"></i> Live Results Log
+                    </h3>
+                    <button onclick="copyResults()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-all">
+                        <i class="fa-regular fa-copy"></i> Copy Valid
+                    </button>
+                </div>
+                <div id="resultsLog" class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 flex-grow overflow-y-auto max-h-[220px] font-mono text-xs space-y-2">
+                    <div class="text-slate-600 italic text-center py-10">Awaiting input data...</div>
+                </div>
+            </div>
+        </section>
+    </main>
 
-        <div class="footer">Secured Service by <strong>DRACÓ GOD</strong></div>
-    </div>
-        <script>
-        const ADMIN_SECRET = "dracoadmin999";
-        let userId = localStorage.getItem('draco_user_id');
-        if (!userId) {
-            userId = 'USER-' + Math.random().toString(36).substring(2, 9).toUpperCase();
-            localStorage.setItem('draco_user_id', userId);
+    <!-- Footer -->
+    <footer class="max-w-5xl mx-auto w-full mt-8 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
+        Built for structural syntax and Luhn algorithm verification only.
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+        function luhnCheck(numStr) {
+            let arr = (numStr + '').replace(/\D/g, '').split('').reverse().map(x => parseInt(x, 10));
+            let sum = arr.reduce((acc, val, i) => {
+                let num = val;
+                if (i % 2 !== 0) {
+                    num *= 2;
+                    if (num > 9) num -= 9;
+                }
+                return acc + num;
+            }, 0);
+            return (sum % 10 === 0) && (arr.length > 0);
         }
 
-        let userData = JSON.parse(localStorage.getItem('draco_user_data_' + userId)) || {
-            id: userId, name: "User " + userId.substring(5), points: 50, isVip: true, lastEmail: 'None', lastAction: 'Initialized App'
-        };
-        saveUserData();
-
-        function saveUserData() {
-            localStorage.setItem('draco_user_data_' + userId, JSON.stringify(userData));
-            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
-            globalUsers[userId] = userData;
-            localStorage.setItem('draco_global_users', JSON.stringify(globalUsers));
+        function clearAll() {
+            document.getElementById('ccInput').value = '';
+            document.getElementById('resultsLog').innerHTML = '<div class="text-slate-600 italic text-center py-10">Awaiting input data...</div>';
+            document.getElementById('statTotal').innerText = '0';
+            document.getElementById('statValid').innerText = '0';
+            document.getElementById('statInvalid').innerText = '0';
         }
 
-        function updateAction(actionText) {
-            userData.lastAction = actionText;
-            saveUserData();
-        }
-
-        function checkAdminAccess() {
-            let pass = prompt("Enter Admin Password:");
-            if (pass === ADMIN_SECRET) toggleAdminPanel(true);
-            else if (pass !== null) alert("❌ Incorrect Admin Password!");
-        }
-
-        function toggleAdminPanel(show) {
-            let panel = document.getElementById('adminPanel');
-            panel.style.display = show ? 'block' : 'none';
-            if (show) loadAdminData();
-        }
-
-        function loadAdminData() {
-            let globalUsers = JSON.parse(localStorage.getItem('draco_global_users') || '{}');
-            let usersArray = Object.values(globalUsers);
-            let tbody = document.getElementById('adminUserTableBody');
-            tbody.innerHTML = "";
-            usersArray.forEach(u => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `<td style="word-break:break-all; font-weight:bold; color:var(--accent-blue);">${u.id}</td>
-                    <td style="color:var(--warning-gold); font-weight:bold;">${u.points}</td>
-                    <td style="font-size:0.65em; color:var(--success-green);">${u.lastEmail}</td>
-                    <td style="font-size:0.65em; color:#fff;">${u.lastAction || 'Active'}</td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        let selectedDomain = "dracoggod.com";
-        let currentLogin = "";
-        let messages = [];
-
-        function setDomain(domain, element) {
-            selectedDomain = domain;
-            document.querySelectorAll('.domain-card').forEach(card => card.classList.remove('active'));
-            if(element) element.classList.add('active');
+        function startCheck() {
+            const rawData = document.getElementById('ccInput').value.trim();
+            const logBox = document.getElementById('resultsLog');
             
-            updateAction(`Switched domain to ${domain}`);
-            generateNewEmail();
-        }
-
-        // Pure Letter Generator (No Numbers Fast)
-        function generatePureLetters(length) {
-            let result = '';
-            let characters = 'abcdefghijklmnopqrstuvwxyz';
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * characters.length));
-            }
-            return result;
-        }
-
-        function generateNewEmail() {
-            currentLogin = generatePureLetters(8);
-            userData.lastEmail = currentLogin + "@" + selectedDomain;
-            updateAction(`Generated new mail: ${userData.lastEmail}`);
-            saveUserData();
-            updateUIStatus();
-
-            document.getElementById('currentEmail').innerText = userData.lastEmail;
-            messages = [];
-            renderInbox();
-        }
-
-        function updateUIStatus() {
-            document.getElementById('userPoints').innerText = userData.points;
-        }
-
-        function copyEmail() {
-            let emailText = document.getElementById('currentEmail').innerText;
-            navigator.clipboard.writeText(emailText);
-            updateAction(`Copied email to clipboard: ${emailText}`);
-            alert('✅ Email copied! Paste it into the app/game to receive OTP.');
-        }
-
-        function checkInbox() {
-            if (!currentLogin) return;
-            let btnText = document.getElementById('refreshText');
-            btnText.innerText = "Checking OTP...";
-            updateAction(`Requested inbox check for ${currentLogin}@${selectedDomain}`);
-
-            let targetUrl = `https://www.1secmail.com/api/v1/?action=getMessages&login=${currentLogin}&domain=${selectedDomain}`;
-
-            fetch(targetUrl, { mode: 'cors' })
-                .then(res => res.json())
-                .then(data => {
-                    btnText.innerText = "Check OTP Now";
-                    if(Array.isArray(data)) {
-                        let existingIds = messages.map(m => m.id);
-                        data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
-                        renderInbox();
-                    }
-                })
-                .catch(err => {
-                    let fallbackUrl = `https://corsproxy.io/?` + encodeURIComponent(targetUrl);
-                    fetch(fallbackUrl)
-                        .then(res => res.json())
-                        .then(data => {
-                            btnText.innerText = "Check OTP Now";
-                            if(Array.isArray(data)) {
-                                let existingIds = messages.map(m => m.id);
-                                data.forEach(msg => { if(!existingIds.includes(msg.id)) messages.push(msg); });
-                                renderInbox();
-                            }
-                        })
-                        .catch(e => {
-                            btnText.innerText = "Check OTP Now";
-                            console.log("Fetch error", e);
-                        });
-                });
-        }
-
-        function openMailDetails(id) {
-            let msg = messages.find(m => m.id === id);
-            if(!msg) return;
-            
-            updateAction(`Opened message from: ${msg.from}`);
-            document.getElementById('readerSender').innerText = msg.from;
-            document.getElementById('readerSubject').innerText = msg.subject;
-            document.getElementById('readerBody').innerText = "Fetching full OTP message content...";
-            document.getElementById('mailReaderModal').style.display = 'flex';
-
-            let bodyUrl = `https://www.1secmail.com/api/v1/?action=readMessage&login=${currentLogin}&domain=${selectedDomain}&id=${id}`;
-            fetch(bodyUrl)
-                .then(res => res.json())
-                .then(data => {
-                    if(data && data.body) {
-                        document.getElementById('readerBody').innerHTML = data.body;
-                    } else {
-                        document.getElementById('readerBody').innerText = "Failed to load body text directly.";
-                    }
-                })
-                .catch(err => {
-                    let fallbackBodyUrl = `https://corsproxy.io/?` + encodeURIComponent(bodyUrl);
-                    fetch(fallbackBodyUrl)
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data && data.body) {
-                                document.getElementById('readerBody').innerHTML = data.body;
-                            } else {
-                                document.getElementById('readerBody').innerText = "Could not fetch message body.";
-                            }
-                        })
-                        .catch(e => {
-                            document.getElementById('readerBody').innerText = "Error loading content. Please check connection.";
-                        });
-                });
-        }
-
-        function closeMailReader() {
-            document.getElementById('mailReaderModal').style.display = 'none';
-        }
-
-        function renderInbox() {
-            let list = document.getElementById('inboxList');
-            list.innerHTML = "";
-            if (messages.length === 0) {
-                list.innerHTML = `<li class="email-item" style="justify-content:center; color:var(--text-muted); border:none;">No OTP received yet. Send OTP from app/game and click Check OTP.</li>`;
+            if (!rawData) {
+                logBox.innerHTML = '<div class="text-rose-400 text-center py-10">Please enter data first!</div>';
                 return;
             }
 
-            messages.forEach(msg => {
-                let li = document.createElement('li');
-                li.className = 'email-item';
-                li.onclick = () => openMailDetails(msg.id);
-                li.innerHTML = `<div class="email-info"><span class="email-sender">From: ${msg.from}</span><span class="email-subject">${msg.subject}</span></div><span style="font-size:0.7em; color:var(--success-green); font-weight:bold;">View OTP 🔍</span>`;
-                list.appendChild(li);
+            const lines = rawData.split('\n');
+            let total = lines.length;
+            let validCount = 0;
+            let invalidCount = 0;
+            
+            logBox.innerHTML = '';
+
+            lines.forEach((line) => {
+                let cleanLine = line.trim();
+                if (!cleanLine) {
+                    total--;
+                    return;
+                }
+
+                // Extracting card number part (splitting by | or space or colon)
+                let parts = cleanLine.split(/[:|,\s]+/);
+                let cardNumber = parts[0];
+
+                let isValid = luhnCheck(cardNumber);
+                let itemDiv = document.createElement('div');
+                itemDiv.className = "p-2 rounded-lg flex items-center justify-between border transition-all";
+
+                if (isValid) {
+                    validCount++;
+                    itemDiv.classList.add('bg-emerald-950/20', 'border-emerald-500/20', 'text-emerald-300');
+                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">VALID</span>`;
+                } else {
+                    invalidCount++;
+                    itemDiv.classList.add('bg-rose-950/20', 'border-rose-500/20', 'text-rose-300');
+                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded text-rose-300">INVALID</span>`;
+                }
+                logBox.appendChild(itemDiv);
             });
+
+            document.getElementById('statTotal').innerText = total;
+            document.getElementById('statValid').innerText = validCount;
+            document.getElementById('statInvalid').innerText = invalidCount;
         }
 
-        window.onload = function() {
-            updateUIStatus();
-            generateNewEmail();
-            setInterval(checkInbox, 6000);
-        };
+        function copyResults() {
+            let validElements = document.querySelectorAll('.text-emerald-350, .border-emerald-500\\/20');
+            let textToCopy = '';
+            validElements.forEach(el => {
+                let text = el.querySelector('span').innerText.replace(/^.*?\s/, '');
+                textToCopy += text + '\n';
+            });
+            
+            if (textToCopy) {
+                navigator.clipboard.writeText(textToCopy);
+                alert('Valid items copied to clipboard!');
+            } else {
+                alert('No valid items found to copy.');
+            }
+        }
     </script>
 </body>
 </html>
