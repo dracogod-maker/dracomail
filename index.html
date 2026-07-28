@@ -3,229 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CC Validator Hub - Pro Engine</title>
+    <title>Reward Hub - Free Redeem Codes</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b0f19;
+            background-color: #07090e;
             color: #f3f4f6;
         }
         .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .neon-glow {
-            box-shadow: 0 0 25px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+        }
+        .gaming-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8">
 
     <!-- Header -->
-    <header class="max-w-5xl mx-auto w-full mb-8 flex justify-between items-center">
+    <header class="max-w-4xl mx-auto w-full mb-8 flex justify-between items-center">
         <div class="flex items-center space-x-3">
-            <div class="bg-indigo-600/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-400">
-                <i class="fa-solid fa-shield-halved text-xl"></i>
+            <div class="gaming-gradient p-2.5 rounded-2xl text-white shadow-lg">
+                <i class="fa-solid fa-gift text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-white">Validator Hub Pro</h1>
-                <p class="text-xs text-slate-400">Advanced BIN & Luhn Verification</p>
+                <h1 class="text-xl font-extrabold tracking-tight text-white">REWARD <span class="text-indigo-400">HUB</span></h1>
+                <p class="text-xs text-slate-400">Daily Verified Redeem Codes</p>
             </div>
         </div>
-        <div class="flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
+        <div class="flex items-center space-x-2 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Engine Active</span>
+            <span>Server Online</span>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto w-full space-y-6 flex-grow">
         
-        <!-- Input Panel -->
-        <section class="lg:col-span-7 glass-panel rounded-2xl p-6 shadow-xl neon-glow flex flex-col">
-            <div class="flex justify-between items-center mb-4">
-                <label for="ccInput" class="text-sm font-semibold text-slate-200 flex items-center gap-2">
-                    <i class="fa-regular fa-credit-card text-indigo-400"></i> Enter Card Details (Bulk Supported)
-                </label>
-                <span class="text-xs text-slate-500">Format: 000000|00|00|000</span>
-            </div>
+        <!-- Hero Banner -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden neon-glow">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
             
-            <textarea id="ccInput" rows="10" placeholder="411111|12|28|123&#10;522222|06|27|456" 
-                class="w-full bg-slate-950/60 border border-slate-800/80 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 resize-none font-mono transition-all"></textarea>
+            <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">
+                <i class="fa-solid fa-fire mr-1 text-amber-400"></i> Season 2026 Updated
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 mb-2">Claim Your Free Rewards</h2>
+            <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto mb-6">
+                Select your favorite platform below to generate and unlock verified gift cards and game codes instantly.
+            </p>
+
+            <!-- Category Selector Buttons -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
+                <button onclick="filterCodes('all')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-border-all"></i> All Codes
+                </button>
+                <button onclick="filterCodes('google')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-google-play text-emerald-400"></i> Play Store
+                </button>
+                <button onclick="filterCodes('freefire')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-gamepad text-amber-400"></i> Free Fire
+                </button>
+                <button onclick="filterCodes('amazon')" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-amazon text-orange-400"></i> Amazon
+                </button>
+            </div>
+        </div>
+
+        <!-- Codes Display Section -->
+        <div class="space-y-3" id="codesContainer">
             
-            <div class="mt-4 flex items-center justify-between gap-4">
-                <div class="text-xs text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> Strict Filter Engine
+            <!-- Code Item 1 -->
+            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="google">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
+                        <i class="fa-brands fa-google-play"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-white">Google Play Gift Card</h3>
+                            <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹500 / $10</span>
+                        </div>
+                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">GPL-8921-XXXX-4921</p>
+                    </div>
                 </div>
-                <div class="flex gap-2">
-                    <button onclick="clearAll()" class="px-4 py-2.5 rounded-xl border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800/50 text-xs font-semibold transition-all">
-                        Clear
-                    </button>
-                    <button onclick="startCheck()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-play"></i> Start Check
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Stats & Results Summary Panel -->
-        <section class="lg:col-span-5 flex flex-col gap-6">
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-3 gap-3">
-                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-indigo-500 text-center">
-                    <span class="block text-xs text-slate-400 font-medium mb-1">Total</span>
-                    <span id="statTotal" class="text-lg font-bold text-white">0</span>
-                </div>
-                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-emerald-500 text-center">
-                    <span class="block text-xs text-slate-400 font-medium mb-1">Valid</span>
-                    <span id="statValid" class="text-lg font-bold text-emerald-400">0</span>
-                </div>
-                <div class="glass-panel p-4 rounded-xl border-l-4 border-l-rose-500 text-center">
-                    <span class="block text-xs text-slate-400 font-medium mb-1">Invalid</span>
-                    <span id="statInvalid" class="text-lg font-bold text-rose-400">0</span>
-                </div>
+                <button onclick="claimCode(this, 'GPL-8921-XXXX-4921')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
+                    <i class="fa-regular fa-copy"></i> Copy Code
+                </button>
             </div>
 
-            <!-- Live Output Screen -->
-            <div class="glass-panel rounded-2xl p-5 flex-grow flex flex-col shadow-xl min-h-[260px]">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-                        <i class="fa-solid fa-terminal text-indigo-400"></i> Live Results Log
-                    </h3>
-                    <button onclick="copyResults()" class="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-all">
-                        <i class="fa-regular fa-copy"></i> Copy Valid
-                    </button>
+            <!-- Code Item 2 -->
+            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="freefire">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-lg flex-shrink-0">
+                        <i class="fa-solid fa-fire"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-white">Free Fire Diamond Voucher</h3>
+                            <span class="bg-amber-500/10 text-amber-400 text-[10px] px-2 py-0.5 rounded font-semibold">500 Diamonds</span>
+                        </div>
+                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">FF26-XYZ9-PL78-M9Q2</p>
+                    </div>
                 </div>
-                <div id="resultsLog" class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 flex-grow overflow-y-auto max-h-[220px] font-mono text-xs space-y-2">
-                    <div class="text-slate-600 italic text-center py-10">Awaiting input data...</div>
-                </div>
+                <button onclick="claimCode(this, 'FF26-XYZ9-PL78-M9Q2')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
+                    <i class="fa-regular fa-copy"></i> Copy Code
+                </button>
             </div>
-        </section>
+
+            <!-- Code Item 3 -->
+            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="amazon">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400 text-lg flex-shrink-0">
+                        <i class="fa-brands fa-amazon"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-white">Amazon Pay E-Gift Code</h3>
+                            <span class="bg-orange-500/10 text-orange-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹250 Value</span>
+                        </div>
+                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">AMZN-7721-BR90-1123</p>
+                    </div>
+                </div>
+                <button onclick="claimCode(this, 'AMZN-7721-BR90-1123')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
+                    <i class="fa-regular fa-copy"></i> Copy Code
+                </button>
+            </div>
+
+            <!-- Code Item 4 -->
+            <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="google">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-lg flex-shrink-0">
+                        <i class="fa-brands fa-google-play"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-white">Google Play Gift Card</h3>
+                            <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-0.5 rounded font-semibold">₹1000 / $20</span>
+                        </div>
+                        <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">GPL-3342-9012-BB71</p>
+                    </div>
+                </div>
+                <button onclick="claimCode(this, 'GPL-3342-9012-BB71')" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
+                    <i class="fa-regular fa-copy"></i> Copy Code
+                </button>
+            </div>
+
+        </div>
     </main>
 
     <!-- Footer -->
-    <footer class="max-w-5xl mx-auto w-full mt-8 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
-        Advanced client-side format & structural checks.
+    <footer class="max-w-4xl mx-auto w-full mt-10 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
+        &copy; 2026 Reward Hub. Codes update daily at midnight.
     </footer>
 
-    <!-- Script Logic -->
+    <!-- JavaScript Script -->
     <script>
-        function luhnCheck(numStr) {
-            let arr = (numStr + '').replace(/\D/g, '').split('').reverse().map(x => parseInt(x, 10));
-            if (arr.length < 13 || arr.length > 19) return false; // Strict length check
-            let sum = arr.reduce((acc, val, i) => {
-                let num = val;
-                if (i % 2 !== 0) {
-                    num *= 2;
-                    if (num > 9) num -= 9;
-                }
-                return acc + num;
-            }, 0);
-            return (sum % 10 === 0);
+        function claimCode(button, codeText) {
+            navigator.clipboard.writeText(codeText);
+            let originalHTML = button.innerHTML;
+            button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
+            button.classList.add('bg-emerald-950/40', 'border-emerald-500/40', 'text-emerald-300');
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.classList.remove('bg-emerald-950/40', 'border-emerald-500/40', 'text-emerald-300');
+            }, 2000);
         }
 
-        function validateCard(fullLine) {
-            let parts = fullLine.split(/[:|,\s]+/);
-            if (parts.length < 4) return { valid: false, reason: "Bad Format" };
+        function filterCodes(category) {
+            // Update button active states
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
+                btn.classList.add('bg-slate-900/80', 'text-slate-300', 'border', 'border-slate-800');
+            });
+            event.currentTarget.classList.remove('bg-slate-900/80', 'text-slate-300', 'border', 'border-slate-800');
+            event.currentTarget.classList.add('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
 
-            let cc = parts[0].replace(/\D/g, '');
-            let month = parseInt(parts[1], 10);
-            let year = parseInt(parts[2], 10);
-            let cvv = parts[3].replace(/\D/g, '');
-
-            // 1. Card Length Check
-            if (cc.length < 13 || cc.length > 19) return { valid: false, reason: "Invalid Length" };
-
-            // 2. Luhn Check
-            if (!luhnCheck(cc)) return { valid: false, reason: "Luhn Failed" };
-
-            // 3. Month & Year Expiry Check
-            if (isNaN(month) || month < 1 || month > 12) return { valid: false, reason: "Invalid Month" };
-            if (isNaN(year)) return { valid: false, reason: "Invalid Year" };
-            
-            // Adjust 2-digit year to 4-digit (e.g. 26 -> 2026)
-            if (year < 100) year += 2000;
-            
-            let currentYear = new Date().getFullYear();
-            let currentMonth = new Date().getMonth() + 1;
-            if (year < currentYear || (year === currentYear && month < currentMonth)) {
-                return { valid: false, reason: "Expired Card" };
-            }
-
-            // 4. CVV Check
-            if (cvv.length < 3 || cvv.length > 4) return { valid: false, reason: "Invalid CVV" };
-
-            return { valid: true, reason: "LIVE / VALID" };
-        }
-
-        function clearAll() {
-            document.getElementById('ccInput').value = '';
-            document.getElementById('resultsLog').innerHTML = '<div class="text-slate-600 italic text-center py-10">Awaiting input data...</div>';
-            document.getElementById('statTotal').innerText = '0';
-            document.getElementById('statValid').innerText = '0';
-            document.getElementById('statInvalid').innerText = '0';
-        }
-
-        function startCheck() {
-            const rawData = document.getElementById('ccInput').value.trim();
-            const logBox = document.getElementById('resultsLog');
-            
-            if (!rawData) {
-                logBox.innerHTML = '<div class="text-rose-400 text-center py-10">Please enter data first!</div>';
-                return;
-            }
-
-            const lines = rawData.split('\n');
-            let total = 0;
-            let validCount = 0;
-            let invalidCount = 0;
-            
-            logBox.innerHTML = '';
-
-            lines.forEach((line) => {
-                let cleanLine = line.trim();
-                if (!cleanLine) return;
-                total++;
-
-                let checkResult = validateCard(cleanLine);
-                let itemDiv = document.createElement('div');
-                itemDiv.className = "p-2 rounded-lg flex items-center justify-between border transition-all";
-
-                if (checkResult.valid) {
-                    validCount++;
-                    itemDiv.classList.add('bg-emerald-950/20', 'border-emerald-500/20', 'text-emerald-300');
-                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-check text-emerald-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-emerald-500/20 px-2 py-0.5 rounded text-emerald-300">${checkResult.reason}</span>`;
+            // Filter cards
+            const cards = document.querySelectorAll('.code-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'flex';
                 } else {
-                    invalidCount++;
-                    itemDiv.classList.add('bg-rose-950/20', 'border-rose-500/20', 'text-rose-300');
-                    itemDiv.innerHTML = `<span><i class="fa-solid fa-circle-xmark text-rose-400 mr-2"></i> ${cleanLine}</span> <span class="text-[10px] bg-rose-500/20 px-2 py-0.5 rounded text-rose-300">${checkResult.reason}</span>`;
+                    card.style.display = 'none';
                 }
-                logBox.appendChild(itemDiv);
             });
-
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statValid').innerText = validCount;
-            document.getElementById('statInvalid').innerText = invalidCount;
-        }
-
-        function copyResults() {
-            let validElements = document.querySelectorAll('.bg-emerald-950\\/20');
-            let textToCopy = '';
-            validElements.forEach(el => {
-                let text = el.querySelector('span').innerText.replace(/^.*?\s/, '');
-                textToCopy += text + '\n';
-            });
-            
-            if (textToCopy) {
-                navigator.clipboard.writeText(textToCopy);
-                alert('Valid items copied to clipboard!');
-            } else {
-                alert('No valid items found to copy.');
-            }
         }
     </script>
 </body>
