@@ -3,288 +3,717 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reward Hub & Secure Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Drago Store - Digital Gaming & App Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #07090e;
+            background-color: #0b0f19;
             color: #f3f4f6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 6%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1e293b;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .neon-glow {
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.2);
+
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
+            color: #38bdf8;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .gaming-gradient {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #f3f4f6;
+            padding: 10px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        .cart-btn:hover {
+            background: #334155;
+        }
+
+        .cart-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+            background: radial-gradient(circle at center, #1e293b 0%, #0b0f19 100%);
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .contact-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 6px 14px;
+            border-radius: 50px;
+            color: #38bdf8;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 650;
+            transition: 0.2s;
+        }
+        .contact-pill:hover {
+            background: #334155;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #38bdf8;
+            padding-left: 12px;
+            color: #f1f5f9;
+        }
+
+        /* Product Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            background: #0f172a;
+        }
+
+        .card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-body h3 {
+            font-size: 17px;
+            margin-bottom: 6px;
+            color: #f8fafc;
+        }
+
+        .card-body p {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 12px;
+            flex: 1;
+        }
+
+        .card-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #34d399;
+        }
+
+        .buy-btn {
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 8px 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .buy-btn:hover {
+            background: #0ea5e9;
+            color: white;
+        }
+
+        /* Hidden Admin Trigger Button */
+        .hidden-admin-trigger {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(30, 41, 59, 0.4);
+            color: transparent;
+            border: none;
+            padding: 15px 4px;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+            cursor: pointer;
+            z-index: 99;
+            transition: 0.3s;
+            font-size: 10px;
+        }
+        .hidden-admin-trigger:hover {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        /* Modal Base */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            padding: 25px;
+            width: 100%;
+            max-width: 480px;
+            border-radius: 12px;
+            position: relative;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 22px;
+            cursor: pointer;
+            color: #94a3b8;
+        }
+        .close-modal:hover { color: white; }
+
+        /* Admin Panel Styles */
+        .admin-form-group {
+            margin-bottom: 14px;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 5px;
+        }
+
+        .admin-form-group input, .admin-form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .admin-form-group input:focus, .admin-form-group textarea:focus {
+            outline: none;
+            border-color: #38bdf8;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: #22c55e;
+            color: white;
+            border: none;
+            padding: 11px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-submit:hover { background: #16a34a; }
+
+        .admin-product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #334155;
+            font-size: 13px;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .delete-btn:hover { background: #dc2626; }
+
+        /* Cart & Payment Drawer Styles */
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .checkout-main-btn {
+            width: 100%;
+            background: #38bdf8;
+            color: #0f172a;
+            border: none;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+        .checkout-main-btn:hover { background: #0ea5e9; color: white; }
+
+        .payment-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .upi-id-display {
+            font-size: 16px;
+            font-weight: bold;
+            color: #38bdf8;
+            margin: 8px 0;
+            background: #1e293b;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px dashed #38bdf8;
+            user-select: all;
+        }
+
+        .qr-placeholder {
+            width: 140px;
+            height: 140px;
+            margin: 10px auto;
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .qr-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #0f172a;
+            color: #64748b;
+            font-size: 13px;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between py-6 px-4 sm:px-6 lg:px-8">
+<body>
 
     <!-- Header -->
-    <header class="max-w-4xl mx-auto w-full mb-8 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <div class="gaming-gradient p-2.5 rounded-2xl text-white shadow-lg">
-                <i class="fa-solid fa-gift text-xl"></i>
-            </div>
-            <div>
-                <h1 class="text-xl font-extrabold tracking-tight text-white">REWARD <span class="text-indigo-400">HUB</span></h1>
-                <p class="text-xs text-slate-400">Dynamic Verified Codes</p>
-            </div>
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-bolt"></i> DRAGO STORE
         </div>
-        <div class="flex items-center space-x-3">
-            <button onclick="requestAdminAccess()" class="bg-indigo-600/20 hover:bg-indigo-600/40 border border-indigo-500/30 text-indigo-300 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shadow-md">
-                <i class="fa-solid fa-lock"></i> Admin Panel
+        <div class="nav-right">
+            <button class="cart-btn" onclick="openCartModal()">
+                <i class="fa-solid fa-cart-shopping"></i> Cart <span class="cart-badge" id="cart-count">0</span>
             </button>
-            <div class="hidden sm:flex items-center space-x-2 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-slate-800 text-xs text-emerald-400">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Online</span>
-            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-4xl mx-auto w-full space-y-6 flex-grow">
-        
-        <!-- Hero Banner -->
-        <div class="glass-panel rounded-3xl p-6 sm:p-8 text-center relative overflow-hidden neon-glow">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
-            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"></div>
-            
-            <span class="bg-indigo-500/10 text-indigo-400 text-xs font-bold px-3 py-1 rounded-full border border-indigo-500/20 uppercase tracking-wider">
-                <i class="fa-solid fa-fire mr-1 text-amber-400"></i> Instant Live Updates
-            </span>
-            <h2 class="text-2xl sm:text-3xl font-black text-white mt-3 mb-2">Claim Your Free Rewards</h2>
-            <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto mb-6">
-                Browse through the latest updated gift cards and game vouchers below.
-            </p>
+    <!-- Side Hidden Admin Button -->
+    <button class="hidden-admin-trigger" onclick="openAdminAuth()" title="Admin Access">Admin</button>
 
-            <!-- Category Selector Buttons -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl mx-auto">
-                <button onclick="filterCodes('all', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-border-all"></i> All Codes
-                </button>
-                <button onclick="filterCodes('google', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-google-play text-emerald-400"></i> Play Store
-                </button>
-                <button onclick="filterCodes('freefire', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-gamepad text-amber-400"></i> Free Fire
-                </button>
-                <button onclick="filterCodes('amazon', this)" tab-btn class="cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2">
-                    <i class="fa-brands fa-amazon text-orange-400"></i> Amazon
-                </button>
-            </div>
-        </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Instant Digital Gaming & App Store</h1>
+        <p>Buy Safe IDs, Top-ups, Accounts & Services with Instant Support!</p>
+        <a href="https://t.me/DRAGO_HEREEE" target="_blank" class="contact-pill">
+            <i class="fa-brands fa-telegram"></i> Help / Contact: @DRAGO_HEREEE
+        </a>
+    </section>
 
-        <!-- Codes Display Section -->
-        <div class="space-y-3" id="codesContainer">
-            <!-- Dynamic Codes will load here -->
+    <!-- Products Container -->
+    <main class="container">
+        <h2 class="section-title">Available Products & Services</h2>
+        <div id="product-grid" class="grid">
+            <!-- Products injected dynamically via JavaScript -->
         </div>
     </main>
 
-    <!-- SECURE ADMIN MODAL -->
-    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="glass-panel w-full max-w-lg rounded-3xl p-6 sm:p-8 border border-indigo-500/20 shadow-2xl relative">
-            <button onclick="toggleAdminModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-sm">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
+    <!-- Admin Authentication Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content" style="max-width: 360px;">
+            <span class="close-modal" onclick="closeModal('auth-modal')">&times;</span>
+            <h3 style="margin-bottom: 15px; color: #38bdf8;">Admin Login</h3>
+            <div class="admin-form-group">
+                <label>Enter Admin Password</label>
+                <input type="password" id="admin-pass-input" placeholder="Enter Password">
+            </div>
+            <button class="btn-submit" onclick="verifyAdminPassword()">Login to Admin Panel</button>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div id="admin-dashboard-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('admin-dashboard-modal')">&times;</span>
+            <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fa-solid fa-user-shield"></i> Admin Dashboard</h3>
             
-            <div class="flex items-center space-x-3 mb-6">
-                <div class="bg-indigo-600/20 p-2.5 rounded-xl border border-indigo-500/30 text-indigo-400">
-                    <i class="fa-solid fa-shield-halved text-lg"></i>
+            <div style="background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px;">
+                <h4 style="font-size: 15px; margin-bottom: 10px; color: #f8fafc;">Add New Product / ID / App</h4>
+                <div class="admin-form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="new-name" placeholder="e.g. Free Fire Max ID Level 65">
                 </div>
-                <div>
-                    <h3 class="text-lg font-bold text-white">Secure Admin Dashboard</h3>
-                    <p class="text-xs text-slate-400">Protected Area - Add Unlimited Codes</p>
+                <div class="admin-form-group">
+                    <label>Price (₹)</label>
+                    <input type="number" id="new-price" placeholder="e.g. 299">
                 </div>
+                <div class="admin-form-group">
+                    <label>Short Description</label>
+                    <input type="text" id="new-desc" placeholder="e.g. Full secure email access">
+                </div>
+                <div class="admin-form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="new-img" placeholder="Paste image link">
+                </div>
+                <button class="btn-submit" onclick="addNewProduct()">Add Product to Website</button>
             </div>
 
-            <form id="addCodeForm" onsubmit="addNewCode(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Select Category</label>
-                    <select id="codeCategory" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
-                        <option value="google">Google Play Store</option>
-                        <option value="freefire">Free Fire Voucher</option>
-                        <option value="amazon">Amazon Gift Card</option>
-                    </select>
+            <h4 style="font-size: 15px; margin-bottom: 10px; color: #f8fafc;">Manage / Delete Existing Products</h4>
+            <div id="admin-product-list" style="max-height: 200px; overflow-y: auto;">
+                <!-- Existing products managed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart / Payment Modal -->
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('cart-modal')">&times;</span>
+            <div id="cart-view-section">
+                <h3 style="margin-bottom: 15px; color: #38bdf8;">Your Shopping Cart</h3>
+                <div id="cart-items-container">
+                    <!-- Cart items -->
+                </div>
+                <div style="margin-top: 15px; border-top: 1px solid #334155; padding-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 16px; font-weight: bold;">Total Amount:</span>
+                    <span style="font-size: 20px; font-weight: bold; color: #34d399;" id="cart-total-price">₹0</span>
+                </div>
+                <button class="checkout-main-btn" onclick="proceedToPayment()">Proceed to Payment</button>
+            </div>
+
+            <div id="payment-view-section" style="display: none;">
+                <h3 style="margin-bottom: 10px; color: #38bdf8; text-align: center;">Complete Payment</h3>
+                <p style="text-align: center; font-size: 13px; color: #94a3b8; margin-bottom: 15px;">Scan QR code or use UPI ID to pay</p>
+                
+                <div class="payment-box">
+                    <div style="font-size: 13px; color: #cbd5e1;">Scan QR Code:</div>
+                    <div class="qr-placeholder">
+                        <img src="https://i.postimg.cc/nczTRj26/Screenshot-2026-07-27-19-00-20-90-ba41e9a642e6e0e2b03656bfbbffd6e4.jpg" alt="Payment QR Code">
+                    </div>
+                    <div style="font-size: 13px; color: #cbd5e1; margin-top: 8px;">Or Pay via UPI ID:</div>
+                    <div class="upi-id-display" id="upi-id-text">sonit28@fam</div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Reward Title & Value</label>
-                    <input type="text" id="codeTitle" required placeholder="e.g. ₹500 Google Play" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-indigo-500">
+                <div class="admin-form-group" style="margin-top: 15px;">
+                    <label>Enter Transaction ID / UTR Number</label>
+                    <input type="text" id="utr-input" placeholder="e.g. 4321xxxx1234">
                 </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1.5">Redeem Code String</label>
-                    <input type="text" id="codeString" required placeholder="e.g. GPL-9921-XXXX-8812" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-xs font-mono text-indigo-300 focus:outline-none focus:border-indigo-500">
-                </div>
-
-                <div class="pt-2 flex gap-3">
-                    <button type="submit" class="flex-grow py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition-all shadow-lg shadow-indigo-600/30">
-                        <i class="fa-solid fa-plus mr-1"></i> Add Code to Website
-                    </button>
-                    <button type="button" onclick="clearAllCodes()" class="px-4 py-3 rounded-xl bg-rose-950/40 border border-rose-500/30 text-rose-400 hover:bg-rose-900/40 text-xs font-bold transition-all">
-                        Reset All
-                    </button>
-                </div>
-            </form>
+                <button class="btn-submit" onclick="submitOrderDone()">Done / Verify Payment</button>
+                <button style="width: 100%; background: transparent; border: none; color: #94a3b8; margin-top: 10px; cursor: pointer; font-size: 13px;" onclick="backToCart()">Back to Cart</button>
+            </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <footer class="max-w-4xl mx-auto w-full mt-10 text-center text-xs text-slate-500 border-t border-slate-900 pt-4">
-        &copy; 2026 Reward Hub. Protected Security Enabled.
+    <footer>
+        <p>&copy; 2026 DRAGO STORE. All Rights Reserved. Fast Digital Delivery.</p>
     </footer>
 
-    <!-- JavaScript Logic -->
     <script>
-        // Yahan aap apna password change kar sakte hain (default: admin123)
-        const ADMIN_PASS = "admin123";
-
-        let defaultCodes = [
-            { category: 'google', title: 'Google Play Gift Card (₹500)', code: 'GPL-8921-XXXX-4921' },
-            { category: 'freefire', title: 'Free Fire Diamond Voucher', code: 'FF26-XYZ9-PL78-M9Q2' },
-            { category: 'amazon', title: 'Amazon Pay E-Gift Code', code: 'AMZN-7721-BR90-1123' }
+        const defaultProducts = [
+            { id: 1, name: "Free Fire ID (Level 60+)", price: 299, desc: "Full secure ID with email access", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" },
+            { id: 2, name: "1000 Instagram Followers", price: 60, desc: "Non-drop high quality followers", img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500" },
+            { id: 3, name: "Netflix Premium 1 Month", price: 149, desc: "Private profile UHD streaming quality", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500" }
         ];
 
-        let currentFilter = 'all';
+        let products = JSON.parse(localStorage.getItem("drago_store_products")) || defaultProducts;
+        let cart = [];
 
-        function getCodes() {
-            let stored = localStorage.getItem('my_reward_codes');
-            if (!stored) {
-                localStorage.setItem('my_reward_codes', JSON.stringify(defaultCodes));
-                return defaultCodes;
-            }
-            return JSON.parse(stored);
-        }
-
-        function renderCodes(filter = 'all') {
-            const container = document.getElementById('codesContainer');
-            let codes = getCodes();
-            container.innerHTML = '';
-
-            let filtered = codes.filter(item => filter === 'all' || item.category === filter);
-
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center py-10 text-slate-500 text-xs italic">No codes available in this category.</div>';
+        function renderProducts() {
+            const grid = document.getElementById("product-grid");
+            grid.innerHTML = "";
+            if(products.length === 0) {
+                grid.innerHTML = "<p style='color: #94a3b8; grid-column: 1/-1; text-align: center;'>No products available right now.</p>";
                 return;
             }
-
-            filtered.forEach((item) => {
-                let icon = 'fa-brands fa-google-play text-emerald-400';
-                let bgClass = 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400';
-                if (item.category === 'freefire') {
-                    icon = 'fa-solid fa-fire text-amber-400';
-                    bgClass = 'bg-amber-500/10 border-amber-500/20 text-amber-400';
-                } else if (item.category === 'amazon') {
-                    icon = 'fa-brands fa-amazon text-orange-400';
-                    bgClass = 'bg-orange-500/10 border-orange-500/20 text-orange-400';
-                }
-
-                let cardHTML = `
-                    <div class="code-card glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-slate-800/80 hover:border-indigo-500/40 transition-all" data-category="${item.category}">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-12 h-12 rounded-xl ${bgClass} border flex items-center justify-center text-lg flex-shrink-0">
-                                <i class="${icon}"></i>
+            products.forEach(p => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${p.img || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500'}" alt="${p.name}">
+                        <div class="card-body">
+                            <h3>${p.name}</h3>
+                            <p>${p.desc}</p>
+                            <div class="card-footer-row">
+                                <span class="price">₹${p.price}</span>
+                                <button class="buy-btn" onclick="addToCart(${p.id})">Add to Cart</button>
                             </div>
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <h3 class="text-sm font-bold text-white">${item.title}</h3>
-                                    <span class="bg-indigo-500/10 text-indigo-300 text-[10px] px-2 py-0.5 rounded font-semibold">Active</span>
-                                </div>
-                                <p class="text-xs font-mono text-indigo-300 mt-1 tracking-wide">${item.code}</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-2 w-full sm:w-auto">
-                            <button onclick="claimCode(this, '${item.code}')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 border border-slate-700/50">
-                                <i class="fa-regular fa-copy"></i> Copy Code
-                            </button>
                         </div>
                     </div>
                 `;
-                container.innerHTML += cardHTML;
             });
         }
 
-        // Password Prompt Security Check
-        function requestAdminAccess() {
-            let password = prompt("Enter Admin Password to Access Panel:");
-            if (password === null) return; // Cancelled
-
-            if (password === ADMIN_PASS) {
-                toggleAdminModal();
-            } else {
-                alert("Incorrect Password! Access Denied.");
+        function addToCart(id) {
+            const product = products.find(item => item.id === id);
+            if(product) {
+                cart.push(product);
+                updateCartCount();
+                alert(product.name + " added to your cart!");
             }
         }
 
-        function toggleAdminModal() {
-            let modal = document.getElementById('adminModal');
-            modal.classList.toggle('hidden');
+        function updateCartCount() {
+            document.getElementById("cart-count").innerText = cart.length;
         }
 
-        function addNewCode(event) {
-            event.preventDefault();
-            let category = document.getElementById('codeCategory').value;
-            let title = document.getElementById('codeTitle').value;
-            let code = document.getElementById('codeString').value;
-
-            let codes = getCodes();
-            codes.unshift({ category, title, code });
-            localStorage.setItem('my_reward_codes', JSON.stringify(codes));
-
-            document.getElementById('addCodeForm').reset();
-            toggleAdminModal();
-            renderCodes(currentFilter);
-            alert('New code added successfully!');
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
         }
 
-        function clearAllCodes() {
-            if (confirm('Are you sure you want to reset all codes?')) {
-                localStorage.removeItem('my_reward_codes');
-                renderCodes(currentFilter);
-                toggleAdminModal();
-            }
-        }
-
-        function claimCode(button, codeText) {
-            navigator.clipboard.writeText(codeText);
-            let originalHTML = button.innerHTML;
-            button.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> Copied!';
-            button.classList.add('bg-emerald-950/40', 'border-emerald-500/40', 'text-emerald-300');
+        function openCartModal() {
+            document.getElementById("cart-view-section").style.display = "block";
+            document.getElementById("payment-view-section").style.display = "none";
             
-            setTimeout(() => {
-                button.innerHTML = originalHTML;
-                button.classList.remove('bg-emerald-950/40', 'border-emerald-500/40', 'text-emerald-300');
-            }, 2000);
+            const container = document.getElementById("cart-items-container");
+            container.innerHTML = "";
+            let total = 0;
+
+            if(cart.length === 0) {
+                container.innerHTML = "<p style='color: #94a3b8; text-align: center; padding: 20px;'>Your cart is empty.</p>";
+            } else {
+                cart.forEach((item) => {
+                    total += Number(item.price);
+                    container.innerHTML += `
+                        <div class="cart-item-row">
+                                    <span>${item.name}</span>
+                            <span style="color: #34d399; font-weight: bold;">₹${item.price}</span>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById("cart-total-price").innerText = "₹" + total;
+            document.getElementById("cart-modal").style.display = "flex";
         }
 
-        function filterCodes(category, btnElement) {
-            currentFilter = category;
-            const buttons = document.querySelectorAll('.cat-btn');
-            buttons.forEach(btn => {
-                btn.classList.0 && btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md', 'shadow-indigo-600/30');
-                btn.classList.add('bg-slate-900/80', 'text-slate-300', 'border', 'border-slate-800');
-            });
-            // Safer toggle for buttons
-            buttons.forEach(b => {
-                b.className = "cat-btn px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2";
-            });
-            btnElement.className = "cat-btn px-4 py-3 rounded-xl bg-indigo-600 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2";
-
-            renderCodes(category);
+        function proceedToPayment() {
+            if(cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            document.getElementById("cart-view-section").style.display = "none";
+            document.getElementById("payment-view-section").style.display = "block";
         }
 
-        window.onload = function() {
-            renderCodes('all');
-        };
+        function backToCart() {
+            document.getElementById("payment-view-section").style.display = "none";
+            document.getElementById("cart-view-section").style.display = "block";
+        }
+
+        function submitOrderDone() {
+            const utr = document.getElementById("utr-input").value.trim();
+            if(!utr) {
+                alert("Please enter your Transaction ID / UTR number!");
+                return;
+            }
+            window.location.href = "https://t.me/DRAGO_HEREEE";
+        }
+
+        // Admin Flow
+        function openAdminAuth() {
+            document.getElementById("admin-pass-input").value = "";
+            document.getElementById("auth-modal").style.display = "flex";
+        }
+
+        function verifyAdminPassword() {
+            const pass = document.getElementById("admin-pass-input").value;
+            if(pass === "DRACO@778300") {
+                closeModal("auth-modal");
+                openAdminDashboard();
+            } else {
+                alert("Incorrect Admin Password!");
+            }
+        }
+
+        function openAdminDashboard() {
+            renderAdminProductList();
+            document.getElementById("admin-dashboard-modal").style.display = "flex";
+        }
+
+        function renderAdminProductList() {
+            const listContainer = document.getElementById("admin-product-list");
+            listContainer.innerHTML = "";
+            if(products.length === 0) {
+                listContainer.innerHTML = "<p style='color: #94a3b8; font-size: 13px;'>No items found.</p>";
+                return;
+            }
+            products.forEach(p => {
+                listContainer.innerHTML += `
+                    <div class="admin-product-item">
+                        <span><b>${p.name}</b> (₹${p.price})</span>
+                        <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addNewProduct() {
+            const name = document.getElementById("new-name").value.trim();
+            const price = document.getElementById("new-price").value.trim();
+            const desc = document.getElementById("new-desc").value.trim();
+            const img = document.getElementById("new-img").value.trim();
+
+            if(!name || !price) {
+                alert("Please enter product name and price!");
+                return;
+            }
+
+            const newObj = {
+                id: Date.now(),
+                name: name,
+                price: Number(price),
+                desc: desc || "Instant digital delivery item",
+                img: img || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500"
+            };
+
+            products.push(newObj);
+            localStorage.setItem("drago_store_products", JSON.stringify(products));
+            
+            document.getElementById("new-name").value = "";
+            document.getElementById("new-price").value = "";
+            document.getElementById("new-desc").value = "";
+            document.getElementById("new-img").value = "";
+
+            renderProducts();
+            renderAdminProductList();
+            alert("Product added successfully and published live!");
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Are you sure you want to delete this item?")) {
+                products = products.filter(p => p.id !== id);
+                localStorage.setItem("drago_store_products", JSON.stringify(products));
+                renderProducts();
+                renderAdminProductList();
+            }
+        }
+
+        renderProducts();
     </script>
 </body>
 </html>
