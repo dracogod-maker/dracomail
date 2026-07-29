@@ -136,7 +136,7 @@
         /* Product Grid */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
@@ -157,7 +157,7 @@
 
         .card img {
             width: 100%;
-            height: 160px;
+            height: 150px;
             object-fit: cover;
             background: #0f172a;
         }
@@ -179,34 +179,52 @@
             color: #94a3b8;
             font-size: 13px;
             margin-bottom: 12px;
-            flex: 1;
         }
 
-        .card-footer-row {
+        /* Plans Variant Box */
+        .plan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: auto;
+            border-top: 1px solid #334155;
+            padding-top: 12px;
+        }
+
+        .plan-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: auto;
+            background: #0f172a;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #334155;
         }
 
-        .price {
-            font-size: 18px;
-            font-weight: bold;
+        .plan-info span {
+            display: block;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .plan-info b {
+            font-size: 14px;
             color: #34d399;
         }
 
-        .buy-btn {
+        .plan-buy-btn {
             background: #38bdf8;
             color: #0f172a;
             border: none;
-            padding: 8px 14px;
+            padding: 6px 12px;
+            font-size: 13px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        .buy-btn:hover {
+        .plan-buy-btn:hover {
             background: #0ea5e9;
             color: white;
         }
@@ -470,24 +488,39 @@
             <h3 style="margin-bottom: 15px; color: #38bdf8;"><i class="fa-solid fa-user-shield"></i> Admin Dashboard</h3>
             
             <div style="background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; margin-bottom: 20px;">
-                <h4 style="font-size: 15px; margin-bottom: 10px; color: #f8fafc;">Add New Product / ID / App</h4>
+                <h4 style="font-size: 15px; margin-bottom: 10px; color: #f8fafc;">Add New Product / Multiple Plans</h4>
                 <div class="admin-form-group">
                     <label>Product Name</label>
-                    <input type="text" id="new-name" placeholder="e.g. Free Fire Max ID Level 65">
-                </div>
-                <div class="admin-form-group">
-                    <label>Price (₹)</label>
-                    <input type="number" id="new-price" placeholder="e.g. 299">
+                    <input type="text" id="new-name" placeholder="e.g. Netflix Premium">
                 </div>
                 <div class="admin-form-group">
                     <label>Short Description</label>
-                    <input type="text" id="new-desc" placeholder="e.g. Full secure email access">
+                    <input type="text" id="new-desc" placeholder="e.g. Private profile UHD streaming">
                 </div>
                 <div class="admin-form-group">
-                    <label>Upload Product Image (Direct from Phone/PC)</label>
+                    <label>Upload Product Image</label>
                     <input type="file" id="new-img-file" accept="image/*">
                 </div>
-                <button class="btn-submit" onclick="addNewProduct()">Add Product to Website</button>
+                
+                <hr style="border-color: #334155; margin: 12px 0;">
+                <p style="font-size: 12px; color: #38bdf8; margin-bottom: 8px;">Set Multi-Duration Prices (Leave blank if not applicable)</p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <div class="admin-form-group" style="flex:1;">
+                        <label>1 Month Price (₹)</label>
+                        <input type="number" id="p-1m" placeholder="149">
+                    </div>
+                    <div class="admin-form-group" style="flex:1;">
+                        <label>6 Months Price (₹)</label>
+                        <input type="number" id="p-6m" placeholder="599">
+                    </div>
+                    <div class="admin-form-group" style="flex:1;">
+                        <label>1 Year Price (₹)</label>
+                        <input type="number" id="p-1y" placeholder="999">
+                    </div>
+                </div>
+
+                <button class="btn-submit" onclick="addNewProduct()">Add Product with Plans</button>
             </div>
 
             <h4 style="font-size: 15px; margin-bottom: 10px; color: #f8fafc;">Manage / Delete Existing Products</h4>
@@ -539,12 +572,38 @@
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 DRAGO STORE. All Rights Reserved. Fast Digital Delivery.</p>
-                </footer>
-                    <script>
+    </footer>
+        <script>
         const defaultProducts = [
-            { id: 1, name: "Free Fire ID (Level 60+)", price: 299, desc: "Full secure ID with email access", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" },
-            { id: 2, name: "1000 Instagram Followers", price: 60, desc: "Non-drop high quality followers", img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500" },
-            { id: 3, name: "Netflix Premium 1 Month", price: 149, desc: "Private profile UHD streaming quality", img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500" }
+            { 
+                id: 1, 
+                name: "Netflix Premium", 
+                desc: "Private profile UHD streaming quality", 
+                img: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=500",
+                plans: [
+                    { duration: "1 Month", price: 149 },
+                    { duration: "6 Months", price: 599 },
+                    { duration: "1 Year", price: 999 }
+                ]
+            },
+            { 
+                id: 2, 
+                name: "Free Fire ID (Level 60+)", 
+                desc: "Full secure ID with email access", 
+                img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500",
+                plans: [
+                    { duration: "Instant Access", price: 299 }
+                ]
+            },
+            { 
+                id: 3, 
+                name: "1000 Instagram Followers", 
+                desc: "Non-drop high quality followers", 
+                img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500",
+                plans: [
+                    { duration: "Standard Package", price: 60 }
+                ]
+            }
         ];
 
         let products = JSON.parse(localStorage.getItem("drago_store_products")) || defaultProducts;
@@ -558,15 +617,29 @@
                 return;
             }
             products.forEach(p => {
+                let plansHTML = '';
+                if(p.plans && p.plans.length > 0) {
+                    p.plans.forEach((plan, idx) => {
+                        plansHTML += `
+                            <div class="plan-row">
+                                <div class="plan-info">
+                                    <span>${plan.duration}</span>
+                                    <b>₹${plan.price}</b>
+                                </div>
+                                <button class="plan-buy-btn" onclick="addToCart(${p.id}, ${idx})">Buy Now</button>
+                            </div>
+                        `;
+                    });
+                }
+
                 grid.innerHTML += `
                     <div class="card">
                         <img src="${p.img || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500'}" alt="${p.name}">
                         <div class="card-body">
                             <h3>${p.name}</h3>
                             <p>${p.desc}</p>
-                            <div class="card-footer-row">
-                                <span class="price">₹${p.price}</span>
-                                <button class="buy-btn" onclick="addToCart(${p.id})">Add to Cart</button>
+                            <div class="plan-options">
+                                ${plansHTML}
                             </div>
                         </div>
                     </div>
@@ -574,12 +647,17 @@
             });
         }
 
-        function addToCart(id) {
-            const product = products.find(item => item.id === id);
-            if(product) {
-                cart.push(product);
+        function addToCart(productId, planIndex) {
+            const product = products.find(item => item.id === productId);
+            if(product && product.plans[planIndex]) {
+                const selectedPlan = product.plans[planIndex];
+                const cartItem = {
+                    name: `${product.name} (${selectedPlan.duration})`,
+                    price: selectedPlan.price
+                };
+                cart.push(cartItem);
                 updateCartCount();
-                alert(product.name + " added to your cart!");
+                alert(cartItem.name + " added to your cart!");
             }
         }
 
@@ -670,7 +748,7 @@
             products.forEach(p => {
                 listContainer.innerHTML += `
                     <div class="admin-product-item">
-                        <span><b>${p.name}</b> (₹${p.price})</span>
+                        <span><b>${p.name}</b></span>
                         <button class="delete-btn" onclick="deleteProduct(${p.id})">Delete</button>
                     </div>
                 `;
@@ -679,46 +757,61 @@
 
         function addNewProduct() {
             const name = document.getElementById("new-name").value.trim();
-            const price = document.getElementById("new-price").value.trim();
             const desc = document.getElementById("new-desc").value.trim();
             const fileInput = document.getElementById("new-img-file");
+            
+            const p1m = document.getElementById("p-1m").value.trim();
+            const p6m = document.getElementById("p-6m").value.trim();
+            const p1y = document.getElementById("p-1y").value.trim();
 
-            if(!name || !price) {
-                alert("Please enter product name and price!");
+            if(!name) {
+                alert("Please enter product name!");
+                return;
+            }
+
+            let plansArray = [];
+            if(p1m) plansArray.push({ duration: "1 Month", price: Number(p1m) });
+            if(p6m) plansArray.push({ duration: "6 Months", price: Number(p6m) });
+            if(p1y) plansArray.push({ duration: "1 Year", price: Number(p1y) });
+
+            if(plansArray.length === 0) {
+                alert("Please add at least one price plan!");
                 return;
             }
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    saveNewProductData(name, price, desc, e.target.result);
+                    saveNewProductData(name, desc, e.target.result, plansArray);
                 };
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                saveNewProductData(name, price, desc, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500");
+                saveNewProductData(name, desc, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500", plansArray);
             }
         }
 
-        function saveNewProductData(name, price, desc, imgSrc) {
+        function saveNewProductData(name, desc, imgSrc, plansArray) {
             const newObj = {
                 id: Date.now(),
                 name: name,
-                price: Number(price),
                 desc: desc || "Instant digital delivery item",
-                img: imgSrc
+                img: imgSrc,
+                plans: plansArray
             };
 
             products.push(newObj);
             localStorage.setItem("drago_store_products", JSON.stringify(products));
             
             document.getElementById("new-name").value = "";
-            document.getElementById("new-price").value = "";
             document.getElementById("new-desc").value = "";
             document.getElementById("new-img-file").value = "";
+            document.getElementById("p-1m").value = "";
+            document.getElementById("p-6m").value = "";
+            document.getElementById("p-1y").value = "";
 
             renderProducts();
             renderAdminProductList();
-            alert("Product added successfully with local image and published live!");
+            alert("Product with multi-plans added successfully!");
         }
 
         function deleteProduct(id) {
