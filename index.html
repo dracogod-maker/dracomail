@@ -293,6 +293,12 @@
             font-size: 14px;
         }
 
+        .admin-form-group input[type="file"] {
+            padding: 7px;
+            background: #0f172a;
+            cursor: pointer;
+        }
+
         .admin-form-group input:focus, .admin-form-group textarea:focus {
             outline: none;
             border-color: #38bdf8;
@@ -478,8 +484,8 @@
                     <input type="text" id="new-desc" placeholder="e.g. Full secure email access">
                 </div>
                 <div class="admin-form-group">
-                    <label>Image URL</label>
-                    <input type="text" id="new-img" placeholder="Paste image link">
+                    <label>Upload Product Image (Direct from Phone/PC)</label>
+                    <input type="file" id="new-img-file" accept="image/*">
                 </div>
                 <button class="btn-submit" onclick="addNewProduct()">Add Product to Website</button>
             </div>
@@ -533,9 +539,8 @@
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 DRAGO STORE. All Rights Reserved. Fast Digital Delivery.</p>
-    </footer>
-
-    <script>
+                </footer>
+                    <script>
         const defaultProducts = [
             { id: 1, name: "Free Fire ID (Level 60+)", price: 299, desc: "Full secure ID with email access", img: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=500" },
             { id: 2, name: "1000 Instagram Followers", price: 60, desc: "Non-drop high quality followers", img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500" },
@@ -601,7 +606,7 @@
                     total += Number(item.price);
                     container.innerHTML += `
                         <div class="cart-item-row">
-                                    <span>${item.name}</span>
+                            <span>${item.name}</span>
                             <span style="color: #34d399; font-weight: bold;">₹${item.price}</span>
                         </div>
                     `;
@@ -676,19 +681,31 @@
             const name = document.getElementById("new-name").value.trim();
             const price = document.getElementById("new-price").value.trim();
             const desc = document.getElementById("new-desc").value.trim();
-            const img = document.getElementById("new-img").value.trim();
+            const fileInput = document.getElementById("new-img-file");
 
             if(!name || !price) {
                 alert("Please enter product name and price!");
                 return;
             }
 
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveNewProductData(name, price, desc, e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                saveNewProductData(name, price, desc, "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500");
+            }
+        }
+
+        function saveNewProductData(name, price, desc, imgSrc) {
             const newObj = {
                 id: Date.now(),
                 name: name,
                 price: Number(price),
                 desc: desc || "Instant digital delivery item",
-                img: img || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500"
+                img: imgSrc
             };
 
             products.push(newObj);
@@ -697,11 +714,11 @@
             document.getElementById("new-name").value = "";
             document.getElementById("new-price").value = "";
             document.getElementById("new-desc").value = "";
-            document.getElementById("new-img").value = "";
+            document.getElementById("new-img-file").value = "";
 
             renderProducts();
             renderAdminProductList();
-            alert("Product added successfully and published live!");
+            alert("Product added successfully with local image and published live!");
         }
 
         function deleteProduct(id) {
